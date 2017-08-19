@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <xprinter.xpos.market.myapplication.widget.FitWidthImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/nav_left_bg_green" />
