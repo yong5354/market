@@ -7,4 +7,7 @@
 
     <string name="title_start_page">启动页</string>
     <string name="title_pictures">酷图</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
