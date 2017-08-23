@@ -5,6 +5,7 @@ import android.content.Context;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.Util.ContextType;
 
 /**
@@ -14,5 +15,5 @@ import xprinter.xpos.market.myapplication.Util.ContextType;
 @Component(modules = {ApplicationModule.class})
 public interface ApplicationComponent {
     @ContextType("application")  Context getContext();
-    //MarketApiService getMarketApiService();
+    CoolMarketApi getCoolMarketApi();
 }

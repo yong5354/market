@@ -10,7 +10,7 @@ import xprinter.xpos.market.myapplication.BaseView;
 public interface HomeFragmentContract {
 
     interface HomeView extends BaseView {
-
+        void debug();
     }
 
     interface HomePresenter extends BasePresenter {
