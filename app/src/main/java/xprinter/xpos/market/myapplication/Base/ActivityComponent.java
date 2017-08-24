@@ -8,6 +8,7 @@ import xprinter.xpos.market.myapplication.ApplicationComponent;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.Util.ContextType;
 import xprinter.xpos.market.myapplication.Util.PerActivity;
+import xprinter.xpos.market.myapplication.ViewModelFactory;
 
 /**
  * Created by Administrator on 2017-08-22.
@@ -19,4 +20,5 @@ public interface ActivityComponent {
     Activity getActivity();
     @ContextType("application") Context getContext();
     CoolMarketApi getCoolMarketApi();
+    ViewModelFactory getViewModelFactory();
 }

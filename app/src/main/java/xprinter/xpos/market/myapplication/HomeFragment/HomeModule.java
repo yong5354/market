@@ -22,10 +22,4 @@ public class HomeModule {
     HomeFragmentContract.HomeView provideHomeView() {
         return mView;
     }
-
-    @PerFragment
-    @Provides
-    HomeViewModel provideHomeViewModel() {
-
-    }
 }

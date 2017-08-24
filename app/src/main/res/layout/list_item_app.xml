@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8.0dip">
+
+    <ImageView
+        android:id="@+id/list_item_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/list_item_layoutCenter"
+        app:srcCompat="@drawable/ic_default_thumbnail" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/list_item_layoutCenter"
+        app:layout_constraintTop_toTopOf="@+id/list_item_icon"
+        app:layout_constraintLeft_toRightOf="@+id/list_item_icon"
+        app:layout_constraintRight_toLeftOf="@+id/list_item_layoutRight"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/list_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="testApkTitle"
+            android:layout_gravity="top"
+            android:textColor="@color/app_title"
+            android:lineSpacingMultiplier="1.2"
+            android:ellipsize="end"
+            android:textSize="16.0dip"/>
+
+        <TextView
+            android:id="@+id/list_item_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/app_info"
+            android:textSize="12.0dip"
+            android:text="testApkInfo" />
+
+        <TextView
+            android:id="@+id/list_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="testApkDescription"
+            android:layout_gravity="top"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="1.2"
+            android:maxLines="2"
+            android:textColor="@color/app_description"
+            android:textSize="12.0dip"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/list_item_layoutRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="@+id/list_item_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/list_item_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/list_item_layoutCenter">
+
+        <TextView
+            android:id="@+id/list_item_downnum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:maxLines="1"
+            android:textColor="@color/app_num"
+            android:textSize="10.0dip"
+            android:text="100" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="?attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="0.0"
+            android:isIndicator="true"
+            tools:rating="3" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

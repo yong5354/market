@@ -10,4 +10,9 @@
 
     <color name="white">#ffffffff</color>
     <color name="Black">#ff000000</color>
+
+    <color name="app_title">#ff111111</color>
+    <color name="app_info">#ff35a1d4</color>
+    <color name="app_description">#ff999999</color>
+    <color name="app_num">#ff666666</color>
 </resources>

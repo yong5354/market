@@ -34,4 +34,10 @@ public class ApplicationModule {
     CoolMarketApi provideCoolMarketApi() {
         return CoolMarketApi.getInstance();
     }
+
+    @Provides
+    @Singleton
+    ViewModelFactory provideViewModelFactory() {
+        return new ViewModelFactory((MyApplication) mContext);
+    }
 }
