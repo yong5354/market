@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
 
     private Context mContext;
     private List<Apk> mApkList = new ArrayList<>();
+    private ItemClickListener mListener;
 
     public ApkListAdapter(Context context) {
         mContext = context;
@@ -37,6 +39,10 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
         mApkList = list;
     }
 
+    public void setListener(ItemClickListener l) {
+        mListener = l;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.list_item_app,parent,false);
@@ -44,7 +50,7 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Apk apkinfo = mApkList.get(position);
         holder.app_title.setText(apkinfo.getTitle());
 
@@ -63,9 +69,19 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
         Glide.with(mContext)
                 .load(apkinfo.getLogo())
                 .placeholder(R.drawable.ic_default_thumbnail)
+                .dontAnimate()
                 .into(holder.app_icon);
         holder.app_icon.setTag(R.id.icon_tag,apkinfo.getTitle());
         holder.app_ratingbar.setRating(Float.parseFloat(apkinfo.getScore()));
+
+        if(mListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClick(v,position);
+                }
+            });
+        }
     }
 
     @Override
@@ -90,7 +106,10 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
             app_desc = (TextView) itemView.findViewById(R.id.list_item_description);
             app_downnum = (TextView) itemView.findViewById(R.id.list_item_downnum);
             app_ratingbar = (RatingBar) itemView.findViewById(R.id.ratingBar);
-
         }
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(View view,int position);
     }
 }

@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
-import xprinter.xpos.market.myapplication.HomeFragment.HomeViewModel;
+import xprinter.xpos.market.myapplication.Home.HomeViewModel;
 import xprinter.xpos.market.myapplication.Util.ContextType;
 
 /**

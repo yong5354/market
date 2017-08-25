@@ -1,9 +1,7 @@
-package xprinter.xpos.market.myapplication.HomeFragment;
+package xprinter.xpos.market.myapplication.Home;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
 import java.util.List;
 
@@ -58,13 +56,16 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
                     public void accept(@NonNull List<Apk> apks) throws Exception {
                         if(page == 1) { //第一页，直接赋值
                             mApkList.setValue(apks);
-                        } else {
                             page++;
-                            if(apks == null || apks.isEmpty())
+                        } else {
+                            if(apks == null || apks.isEmpty()) {
                                 mStatus.setValue(0); //load complete
+                                return;
+                            }
                             List<Apk> tmp = mApkList.getValue();
                             tmp.addAll(apks);
                             mApkList.setValue(tmp);
+                            page++;
                         }
                     }
                 }, new Consumer<Throwable>() {

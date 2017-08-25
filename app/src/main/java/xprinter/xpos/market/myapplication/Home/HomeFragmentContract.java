@@ -1,4 +1,4 @@
-package xprinter.xpos.market.myapplication.HomeFragment;
+package xprinter.xpos.market.myapplication.Home;
 
 import xprinter.xpos.market.myapplication.BasePresenter;
 import xprinter.xpos.market.myapplication.BaseView;

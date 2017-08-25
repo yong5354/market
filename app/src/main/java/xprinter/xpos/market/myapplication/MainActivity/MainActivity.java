@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xprinter.xpos.market.myapplication.Base.BaseActivity;
-import xprinter.xpos.market.myapplication.HomeFragment.HomeFragment;
+import xprinter.xpos.market.myapplication.Home.HomeFragment;
 import xprinter.xpos.market.myapplication.R;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {

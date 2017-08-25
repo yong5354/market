@@ -1,9 +1,10 @@
-package xprinter.xpos.market.myapplication.HomeFragment;
+package xprinter.xpos.market.myapplication.Home;
 
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xprinter.xpos.market.myapplication.Base.BaseActivity;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
+import xprinter.xpos.market.myapplication.Detail.AppDetailActivity;
 import xprinter.xpos.market.myapplication.R;
 import xprinter.xpos.market.myapplication.ViewModelFactory;
 import xprinter.xpos.market.myapplication.adapter.ApkListAdapter;
@@ -64,11 +65,18 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initInject();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, root);
+        //recycleview
         final int insets = (int) getResources().getDimension(R.dimen.card_insets);
         apkList.setLayoutManager(new LinearLayoutManager(mContext));
         apkList.setItemAnimator(new DefaultItemAnimator());
@@ -78,8 +86,36 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
                 outRect.set(insets,insets,insets,insets);
             }
         });
+        //decoration
         mDecoration = new LoadMoreDecoration(null);
+        mDecoration.setListener(new LoadMoreDecoration.LoadDataListener() {
+            @Override
+            public void LoadData() {
+                mViewModel.refreshApkList();
+            }
+        });
         apkList.addItemDecoration(mDecoration);
+        //adapter
+        mAdapter = new ApkListAdapter(mContext);
+        mAdapter.setListener(new ApkListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                int apkid = Integer.parseInt(mViewModel.getApkList().getValue().get(position).getId());
+                Intent i = new Intent(mContext, AppDetailActivity.class);
+                i.putExtra("id",apkid);
+                startActivity(i);
+            }
+        });
+        apkList.setAdapter(mAdapter);
+        //swipeRefreshview
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mDecoration.setLoadComplete(false);
+                mViewModel.InitPage();
+                mViewModel.refreshApkList();
+            }
+        });
         return root;
     }
 
@@ -91,11 +127,6 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initInject();
-        //init adapter
-        mAdapter = new ApkListAdapter(mContext);
-        mAdapter.setApkList(new ArrayList<Apk>());
-        apkList.setAdapter(mAdapter);
         //init viewmodel
         mViewModel = ViewModelProviders.of(this, mModelFactory).get(HomeViewModel.class);
         mViewModel.getApkList().observe(this, new Observer<List<Apk>>() {
@@ -116,20 +147,6 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
                     swipeRefresh.setRefreshing(true);
                 else if(integer == 2)
                     swipeRefresh.setRefreshing(false);
-            }
-        });
-        mDecoration.setListener(new LoadMoreDecoration.LoadDataListener() {
-            @Override
-            public void LoadData() {
-                mViewModel.refreshApkList();
-            }
-        });
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mDecoration.setLoadComplete(false);
-                mViewModel.InitPage();
-                mViewModel.refreshApkList();
             }
         });
         //start load
@@ -163,6 +180,6 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
 
     @Override
     public void debug() {
-        Toast.makeText(mContext, "start", Toast.LENGTH_LONG).show();
+        //Toast.makeText(mContext, "start", Toast.LENGTH_LONG).show();
     }
 }

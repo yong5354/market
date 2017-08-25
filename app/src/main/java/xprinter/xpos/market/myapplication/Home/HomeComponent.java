@@ -1,4 +1,4 @@
-package xprinter.xpos.market.myapplication.HomeFragment;
+package xprinter.xpos.market.myapplication.Home;
 
 import dagger.Component;
 import xprinter.xpos.market.myapplication.Base.ActivityComponent;
