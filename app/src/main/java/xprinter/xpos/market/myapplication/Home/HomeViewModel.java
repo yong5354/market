@@ -31,8 +31,9 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
     private MutableLiveData<List<Apk>> mApkList = new MutableLiveData<>();
     private MutableLiveData<Integer> mStatus = new MutableLiveData<>(); //0-loadcomplete,1-refreshing,2-stop
 
-    @Inject
-    public HomeViewModel() {}
+    public HomeViewModel() {
+
+    }
 
     public MutableLiveData<List<Apk>> getApkList() {
         return mApkList;

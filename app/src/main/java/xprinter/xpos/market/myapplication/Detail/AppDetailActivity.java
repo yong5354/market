@@ -16,6 +16,7 @@ public class AppDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_app_detail);
         ActionBar bar = getSupportActionBar();
         if(bar != null) {
+            bar.setElevation(0);
             bar.setDisplayHomeAsUpEnabled(true);
         }
         int apkid = getIntent().getIntExtra("id",-1);

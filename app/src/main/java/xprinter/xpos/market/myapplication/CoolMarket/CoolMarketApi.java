@@ -18,6 +18,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
+import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Constant;
 
 /**
@@ -72,5 +73,9 @@ public class CoolMarketApi {
 
     public Observable<List<Apk>> obtainHomepageApkList(int page) {
         return mService.obtainHomepageApkList(page);
+    }
+
+    public Observable<ApkField> obtainApkField(int id) {
+        return mService.obtainApkField(id);
     }
 }

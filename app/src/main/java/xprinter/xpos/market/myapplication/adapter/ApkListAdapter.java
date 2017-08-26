@@ -69,7 +69,6 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
         Glide.with(mContext)
                 .load(apkinfo.getLogo())
                 .placeholder(R.drawable.ic_default_thumbnail)
-                .dontAnimate()
                 .into(holder.app_icon);
         holder.app_icon.setTag(R.id.icon_tag,apkinfo.getTitle());
         holder.app_ratingbar.setRating(Float.parseFloat(apkinfo.getScore()));

@@ -5,6 +5,6 @@ package xprinter.xpos.market.myapplication;
  */
 
 public interface BasePresenter {
-    void start();
+    void start(Object arg);
     void stop();
 }

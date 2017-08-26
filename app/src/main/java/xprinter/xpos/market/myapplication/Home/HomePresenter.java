@@ -16,7 +16,7 @@ public class HomePresenter implements HomeFragmentContract.HomePresenter{
     }
 
     @Override
-    public void start() {
+    public void start(Object arg) {
         mView.debug();
     }
 

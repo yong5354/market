@@ -16,4 +16,8 @@
     <color name="app_info">#ff35a1d4</color>
     <color name="app_description">#ff999999</color>
     <color name="app_num">#ff666666</color>
+
+    <color name="link_text_color">#ff35a1d4</color>
+    <color name="app_header_title">#ffffffff</color>
+    <color name="app_header_info">#ffeeeeee</color>
 </resources>

@@ -9,6 +9,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
+import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
 
 /**
  * Created by Administrator on 2017-08-22.
@@ -18,8 +19,8 @@ public interface CoolMarketService {
     @GET("api.php?method=getHomepageApkList&slm=1")
     Observable<List<Apk>> obtainHomepageApkList(@Query("p") int page);
 
-    //@GET("api.php?method=getApkField&slm=1&includeMeta=0")
-    //Observable<ApkField> obtainApkField(@Query("id") int Id);
+    @GET("api.php?method=getApkField&slm=1&includeMeta=0")
+    Observable<ApkField> obtainApkField(@Query("id") int Id);
 
     //@GET("api.php?method=getSearchApkList&slm=1")
     //Observable<List<Apk>> obtainSearchApkList(@Query(value = "q", encoded = true) String query, @Query("p") int page);
