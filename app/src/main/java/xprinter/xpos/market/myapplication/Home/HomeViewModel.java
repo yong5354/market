@@ -2,6 +2,7 @@ package xprinter.xpos.market.myapplication.Home;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import java.util.List;
 
@@ -86,5 +87,6 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
     @Override
     public void inject(ApplicationComponent component) {
         component.inject(this);
+        Log.e("FANGUOYONG","Market1:" + mMarketApi);
     }
 }

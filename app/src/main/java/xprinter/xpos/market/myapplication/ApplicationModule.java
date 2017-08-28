@@ -16,10 +16,13 @@ import xprinter.xpos.market.myapplication.Util.ContextType;
 
 @Module
 public class ApplicationModule {
+
     private final Context mContext;
+    private ViewModelFactory mFactory;
 
     ApplicationModule(Context context) {
         mContext = context;
+        mFactory = new ViewModelFactory((MyApplication) mContext);
     }
 
     @Provides
@@ -38,6 +41,6 @@ public class ApplicationModule {
     @Provides
     @Singleton
     ViewModelFactory provideViewModelFactory() {
-        return new ViewModelFactory((MyApplication) mContext);
+        return mFactory;
     }
 }

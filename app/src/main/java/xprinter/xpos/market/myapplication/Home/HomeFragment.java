@@ -60,6 +60,8 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
     private ApkListAdapter mAdapter;
     private LoadMoreDecoration mDecoration;
 
+    private Runnable mLoadTask;
+
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
@@ -161,7 +163,7 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
             }
         });
         //start load
-        apkList.postDelayed(new Runnable() {
+        mLoadTask = new Runnable() {
             @Override
             public void run() {
                 mDecoration.setLoadComplete(false);
@@ -169,8 +171,21 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
                 swipeRefresh.setRefreshing(true);
                 mViewModel.refreshApkList();
             }
-        },100);
+        };
+        apkList.postDelayed(mLoadTask,100);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mPresenter.start(null);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        apkList.removeCallbacks(mLoadTask);
+        mPresenter.stop();
     }
 
     @Override
@@ -198,6 +213,6 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
 
     @Override
     public void debug() {
-        Toast.makeText(mContext, "buildtypc:" + BuildConfig.BUILD_TYPE, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "buildtype:" + BuildConfig.BUILD_TYPE, Toast.LENGTH_SHORT).show();
     }
 }

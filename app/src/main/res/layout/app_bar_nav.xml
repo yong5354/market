@@ -21,14 +21,14 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
 
     </android.support.design.widget.AppBarLayout>
 
     <include
-        layout="@layout/content_nav"
+        layout="@layout/content_viewpager_nav"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

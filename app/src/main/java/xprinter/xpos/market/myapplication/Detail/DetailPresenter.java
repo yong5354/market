@@ -1,5 +1,7 @@
 package xprinter.xpos.market.myapplication.Detail;
 
+import android.util.Log;
+
 import java.util.Observable;
 
 import javax.inject.Inject;
@@ -27,6 +29,7 @@ public class DetailPresenter implements DetailFragmentContract.DetailPresenter {
     public DetailPresenter(DetailFragmentContract.DetailView v) {
         mView = v;
         mMarketApi = CoolMarketApi.getInstance();
+        Log.e("FANGUOYONG","Market2:" + mMarketApi);
     }
 
     @Override

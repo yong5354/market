@@ -70,16 +70,17 @@
         android:src="@drawable/ic_action_comment"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/app_header_download" />
+        app:layout_constraintRight_toLeftOf="parent" />
 
-    <ImageButton
-        android:id="@+id/app_header_download"
-        style="?attr/actionButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_action_download"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+    <!--<ImageButton-->
+        <!--android:id="@+id/app_header_download"-->
+        <!--style="?attr/actionButtonStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:src="@drawable/ic_action_download"-->
+        <!--android:textColor="@color/white"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent" />-->
+
 </android.support.constraint.ConstraintLayout>
