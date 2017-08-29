@@ -15,6 +15,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import xprinter.xpos.market.myapplication.ApplicationComponent;
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 
@@ -29,14 +30,14 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
 
     private int page = 1;
 
-    private MutableLiveData<List<Apk>> mApkList = new MutableLiveData<>();
+    private MutableLiveData<List<BaseApk>> mApkList = new MutableLiveData<>();
     private MutableLiveData<Integer> mStatus = new MutableLiveData<>(); //0-loadcomplete,1-refreshing,2-stop
 
     public HomeViewModel() {
 
     }
 
-    public MutableLiveData<List<Apk>> getApkList() {
+    public MutableLiveData<List<BaseApk>> getApkList() {
         return mApkList;
     }
 
@@ -50,12 +51,12 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
 
     public void refreshApkList() {
         mStatus.setValue(1);
-        Observable<List<Apk>> observable = mMarketApi.obtainHomepageApkList(page);
+        Observable<List<BaseApk>> observable = mMarketApi.obtainHomepageApkList(page);
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<List<Apk>>() {
+                .subscribe(new Consumer<List<BaseApk>>() {
                     @Override
-                    public void accept(@NonNull List<Apk> apks) throws Exception {
+                    public void accept(@NonNull List<BaseApk> apks) throws Exception {
                         if(page == 1) { //第一页，直接赋值
                             mApkList.setValue(apks);
                             page++;
@@ -64,7 +65,7 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
                                 mStatus.setValue(0); //load complete
                                 return;
                             }
-                            List<Apk> tmp = mApkList.getValue();
+                            List<BaseApk> tmp = mApkList.getValue();
                             tmp.addAll(apks);
                             mApkList.setValue(tmp);
                             page++;
@@ -87,6 +88,5 @@ public class HomeViewModel extends ViewModel implements ApplicationComponent.inj
     @Override
     public void inject(ApplicationComponent component) {
         component.inject(this);
-        Log.e("FANGUOYONG","Market1:" + mMarketApi);
     }
 }

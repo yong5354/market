@@ -26,10 +26,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xprinter.xpos.market.myapplication.Base.BaseActivity;
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
+import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
+import xprinter.xpos.market.myapplication.Data.AppDatabase;
 import xprinter.xpos.market.myapplication.R;
 import xprinter.xpos.market.myapplication.Util.ContextType;
+import xprinter.xpos.market.myapplication.Util.DownLoadTask;
 import xprinter.xpos.market.myapplication.Util.PackageUtil;
 
 public class DetailFragment extends Fragment implements DetailFragmentContract.DetailView {
@@ -71,8 +75,8 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
 
     private int[] screenshotIds = {R.id.app_view_screenshot0, R.id.app_view_screenshot1, R.id.app_view_screenshot2, R.id.app_view_screenshot3, R.id.app_view_screenshot4, R.id.app_view_screenshot5};
 
-    private ApkField mApkField;
-    private Apk mApk;
+    private BaseApkField mApkField;
+    private BaseApk mApk;
 
     public static DetailFragment newInstance() {
         return new DetailFragment();
@@ -134,7 +138,7 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
     }
 
     @Override
-    public void updateContent(ApkField apkfile) {
+    public void updateContent(BaseApkField apkfile) {
         if (apkfile != null) {
             mApkField = apkfile;
             mApk = mApkField.getApk();
@@ -146,11 +150,11 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
             //title
             appHeaderTitle.setText(mApk.getTitle());
             //star
-            appHeaderRatingStar.setRating(Float.parseFloat(mApk.getStar()));
+            appHeaderRatingStar.setRating(mApk.getScoreStar());
             //info
-            appHeaderInfo.setText(mApk.getApkversionname());
+            appHeaderInfo.setText(mApk.getVersionName());
             //screenshot
-            String[] url = apkfile.getField().getScreenshots().split(",");
+            String[] url = apkfile.getScreenShots().split(",");
             int size = Math.min(screenshotIds.length, url.length);
             for (int i = 0; i < size; i++) {
                 ImageView v = (ImageView) getView().findViewById(screenshotIds[i]);
@@ -162,24 +166,24 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
                 v.setTag(R.id.icon_tag, i);
             }
             //message
-            appViewMeta1.setText(appViewMeta1.getText() + apkfile.getField().getLanguage());
-            appViewMeta2.setText(appViewMeta2.getText() + apkfile.getField().getApksize());
-            appViewMeta3.setText(appViewMeta3.getText() + apkfile.getField().getRomversion() + "+");
-            appViewMeta4.setText(appViewMeta4.getText() + apkfile.getField().getLastupdate());
-            appViewRemark.setText(appViewRemark.getText() + apkfile.getField().getRemark());
+            appViewMeta1.setText(appViewMeta1.getText() + apkfile.getLanguage());
+            appViewMeta2.setText(appViewMeta2.getText() + mApk.getApkSize());
+            appViewMeta3.setText(appViewMeta3.getText() + apkfile.getRomversion() + "+");
+            appViewMeta4.setText(appViewMeta4.getText() + apkfile.getLastupdate());
+            appViewRemark.setText(appViewRemark.getText() + apkfile.getRemark());
 
             StringBuilder sb = new StringBuilder();
-            sb.append(apkfile.getField().getIntroduce());
-            sb.append("<br/><strong>").append(mApk.getApkversionname()).append(" :</strong><br/>")
-                    .append(apkfile.getField().getChangelog()).append("<br/>");
-            sb.append("<br/><strong>更新记录 :</strong><br/>").append(apkfile.getField().getChangehistory())
+            sb.append(apkfile.getIntroduce());
+            sb.append("<br/><strong>").append(mApk.getVersionName()).append(" :</strong><br/>")
+                    .append(apkfile.getChangelog()).append("<br/>");
+            sb.append("<br/><strong>更新记录 :</strong><br/>").append(apkfile.getChangehistory())
                     .append("<br/>");
             appViewIntroduce.setText(Html.fromHtml(sb.toString().replace("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY));
             //download
-            int version = PackageUtil.getInstalledVersion(mAppContext,mApk.getApkname());
+            int version = PackageUtil.getInstalledVersion(mAppContext,mApk.getApkName());
             if(version == -1)
                 download.setText(R.string.download);
-            else if(version < Integer.parseInt(mApk.getApkversioncode()))
+            else if(version < mApk.getVersionCode())
                 download.setText(R.string.update);
             else
                 download.setText(R.string.open);
@@ -190,6 +194,9 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
 
     @OnClick(R.id.download)
     void OnDownload(View view) {
-        Toast.makeText(mContext,"下载啊",Toast.LENGTH_SHORT).show();
+        if(mApk == null || mApk.getDownloadUrl() == null) {
+            Toast.makeText(mContext, "无法下载，请切换来源", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 }

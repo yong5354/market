@@ -1,5 +1,6 @@
 package xprinter.xpos.market.myapplication.Detail;
 
+import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.BasePresenter;
 import xprinter.xpos.market.myapplication.BaseView;
 import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
@@ -11,7 +12,7 @@ import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
 public interface DetailFragmentContract {
 
     interface DetailView extends BaseView {
-        void updateContent(ApkField apkfile);
+        void updateContent(BaseApkField apkfile);
     }
 
     interface DetailPresenter extends BasePresenter {

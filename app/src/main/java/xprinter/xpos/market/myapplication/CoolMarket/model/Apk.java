@@ -1,10 +1,12 @@
 package xprinter.xpos.market.myapplication.CoolMarket.model;
 
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
+
 /**
  * Created by Administrator on 2017-08-23.
  */
 
-public class Apk {
+public class Apk extends BaseApk{
 
     /**
      * id : 152804
@@ -47,7 +49,7 @@ public class Apk {
      * commentCount : 36
      */
 
-    private String id;
+    private int id;
     private String catid;
     private String title;
     private String logo;
@@ -86,11 +88,11 @@ public class Apk {
     private int adminscore;
     private int commentCount;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -102,6 +104,7 @@ public class Apk {
         this.catid = catid;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -110,8 +113,29 @@ public class Apk {
         this.title = title;
     }
 
+    @Override
     public String getLogo() {
         return logo;
+    }
+
+    @Override
+    public String getApkName() {
+        return apkname;
+    }
+
+    @Override
+    public String getApkSize() {
+        return apksize;
+    }
+
+    @Override
+    public String getVersionName() {
+        return apkversionname;
+    }
+
+    @Override
+    public int getVersionCode() {
+        return Integer.parseInt(apkversioncode);
     }
 
     public void setLogo(String logo) {
@@ -278,6 +302,7 @@ public class Apk {
         this.votenum = votenum;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
@@ -350,6 +375,7 @@ public class Apk {
         this.shorttitle = shorttitle;
     }
 
+    @Override
     public String getUpdateFlag() {
         return updateFlag;
     }
@@ -388,5 +414,18 @@ public class Apk {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public long getDownloadCount() {
+        return Long.parseLong(downnum);
+    }
+
+    public float getScoreStar() {
+        return Float.parseFloat(score);
+    }
+
+    @Override
+    public String getDownloadUrl() {
+        return null;
     }
 }

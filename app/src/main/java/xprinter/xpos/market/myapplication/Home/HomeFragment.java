@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xprinter.xpos.market.myapplication.Base.BaseActivity;
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.BuildConfig;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 import xprinter.xpos.market.myapplication.Detail.AppDetailActivity;
@@ -111,7 +112,7 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
         mAdapter.setListener(new ApkListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                int apkid = Integer.parseInt(mViewModel.getApkList().getValue().get(position).getId());
+                int apkid = mViewModel.getApkList().getValue().get(position).getId();
                 Intent i = new Intent(mContext, AppDetailActivity.class);
                 i.putExtra("id",apkid);
                 startActivity(i);
@@ -142,9 +143,9 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
         super.onActivityCreated(savedInstanceState);
         //init viewmodel
         mViewModel = ViewModelProviders.of(this, mModelFactory).get(HomeViewModel.class);
-        mViewModel.getApkList().observe(this, new Observer<List<Apk>>() {
+        mViewModel.getApkList().observe(this, new Observer<List<BaseApk>>() {
             @Override
-            public void onChanged(@Nullable List<Apk> apks) {
+            public void onChanged(@Nullable List<BaseApk> apks) {
                 Log.e("FANGUOYONG","get apk list:" + apks.size());
                 mAdapter.setApkList(apks);
                 mAdapter.notifyDataSetChanged();

@@ -1,10 +1,12 @@
 package xprinter.xpos.market.myapplication.CoolMarket.model;
 
+import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
+
 /**
  * Created by Administrator on 2017-08-26.
  */
 
-public class ApkField {
+public class ApkField extends BaseApkField{
 
     /**
      * meta : {"id":"156328","catid":"56","title":"通知增强 for 微信","logo":"http://image.coolapk.com/apk_logo/2017/0821/44ae7af26fe0619c7ebb4552db6da462-for-156328-o_1bo1f4unl1jiu8ubp6evvo1mf6q-uid-625637.png","version":"1.1.0","romversion":"4.4","ishot":"0","apktype":"1","apkname":"me.zhanghai.android.wechatnotificationtweaks2","apkversionname":"1.1.0","apkversioncode":"10","apksize":"1.16M","apkmd5":"3f7993b60776dd42872f6deaa39773ed","sdkversion":"19","maxsdkversion":"0","autoupdate":"1","star":"4","score":"4.3","downnum":"2238","commentnum":"55","replynum":"0","favnum":"330","albumnum":"0","votenum":"5","description":"","developername":"Asirel_Dremurr","pubdate":"1503364128","status":"1","lastupdate":"1503711252"}
@@ -18,6 +20,46 @@ public class ApkField {
 
     public Apk getApk() {
         return meta;
+    }
+
+    @Override
+    public String getScreenShots() {
+        return field.screenshot;
+    }
+
+    @Override
+    public String getLanguage() {
+        return field.language;
+    }
+
+    @Override
+    public String getRomversion() {
+        return field.romversion;
+    }
+
+    @Override
+    public String getLastupdate() {
+        return field.lastupdate;
+    }
+
+    @Override
+    public String getRemark() {
+        return field.remark;
+    }
+
+    @Override
+    public String getIntroduce() {
+        return field.introduce;
+    }
+
+    @Override
+    public String getChangelog() {
+        return field.changelog;
+    }
+
+    @Override
+    public String getChangehistory() {
+        return field.changehistory;
     }
 
     public void setApk(Apk meta) {

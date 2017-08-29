@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 import xprinter.xpos.market.myapplication.R;
 
@@ -28,14 +29,14 @@ import xprinter.xpos.market.myapplication.R;
 public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHolder>{
 
     private Context mContext;
-    private List<Apk> mApkList = new ArrayList<>();
+    private List<BaseApk> mApkList = new ArrayList<>();
     private ItemClickListener mListener;
 
     public ApkListAdapter(Context context) {
         mContext = context;
     }
 
-    public void setApkList(List<Apk> list) {
+    public void setApkList(List<BaseApk> list) {
         mApkList = list;
     }
 
@@ -51,12 +52,12 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Apk apkinfo = mApkList.get(position);
+        BaseApk apkinfo = mApkList.get(position);
         holder.app_title.setText(apkinfo.getTitle());
 
         StringBuilder apk_info = new StringBuilder();
-        apk_info.append("<font color=\"#ff35a1d4\">").append(apkinfo.getApkversionname()).append("</font>");
-        apk_info.append("<font color=\"black\">, ").append(apkinfo.getApksize()).append(", </font>");
+        apk_info.append("<font color=\"#ff35a1d4\">").append(apkinfo.getVersionName()).append("</font>");
+        apk_info.append("<font color=\"black\">, ").append(apkinfo.getApkSize()).append(", </font>");
         if (apkinfo.getUpdateFlag() == "new") {
             apk_info.append("<font color=\"red\">New</font>");
         } else {
@@ -65,13 +66,13 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
         holder.app_info.setText(Html.fromHtml(apk_info.toString(),Html.FROM_HTML_MODE_LEGACY));
 
         holder.app_desc.setText(apkinfo.getDescription());
-        holder.app_downnum.setText(apkinfo.getDownnum());
+        holder.app_downnum.setText(apkinfo.getDownloadCount()+"");
         Glide.with(mContext)
                 .load(apkinfo.getLogo())
                 .placeholder(R.drawable.ic_default_thumbnail)
                 .into(holder.app_icon);
         holder.app_icon.setTag(R.id.icon_tag,apkinfo.getTitle());
-        holder.app_ratingbar.setRating(Float.parseFloat(apkinfo.getScore()));
+        holder.app_ratingbar.setRating(apkinfo.getScoreStar());
 
         if(mListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
