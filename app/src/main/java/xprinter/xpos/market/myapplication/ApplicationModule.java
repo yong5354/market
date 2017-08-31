@@ -8,9 +8,12 @@ import javax.inject.Singleton;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
+import xprinter.xpos.market.myapplication.CoolpadMarket.CoolpadMarketApi;
 import xprinter.xpos.market.myapplication.Data.AppDatabase;
 import xprinter.xpos.market.myapplication.Util.ContextType;
+import xprinter.xpos.market.myapplication.Util.DownLoadTask;
 
 /**
  * Created by Administrator on 2017-08-18.
@@ -38,9 +41,10 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    CoolMarketApi provideCoolMarketApi() {
+    BaseMarketApi provideBaseMarketApi() { //返回不同实例，切换服务器源
         //return CoolMarketApi.getInstance();
-        return new CoolMarketApi();
+        //return new CoolMarketApi(); //coolmarket
+        return new CoolpadMarketApi(); //coolpad
     }
 
     @Provides
@@ -53,5 +57,11 @@ public class ApplicationModule {
     @Singleton
     AppDatabase provideAppDatabase() {
         return Room.databaseBuilder(mContext,AppDatabase.class,"database-downloadapk").build();
+    }
+
+    @Provides
+    @Singleton
+    DownLoadTask provideDownLoadTask() {
+        return new DownLoadTask(mContext,provideAppDatabase());
     }
 }

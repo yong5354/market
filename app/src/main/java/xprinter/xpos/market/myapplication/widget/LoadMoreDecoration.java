@@ -77,6 +77,8 @@ public class LoadMoreDecoration extends RecyclerView.ItemDecoration{
 
         LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
         if (layoutManager.findFirstVisibleItemPosition() == 0 && layoutManager.findLastVisibleItemPosition() + 1 == parent.getAdapter().getItemCount()) {
+            if(mListener != null)
+                mListener.LoadData();
             return;
         }
 

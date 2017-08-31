@@ -3,6 +3,7 @@ package xprinter.xpos.market.myapplication.Detail;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,10 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import xprinter.xpos.market.myapplication.Base.BaseActivity;
 import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
@@ -47,6 +52,8 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
     DetailPresenter mPresenter;
     @Inject
     Activity mContext;
+    @Inject
+    DownLoadTask mDownloadTask;
 
     @Bind(R.id.app_view_meta1)
     TextView appViewMeta1;
@@ -75,6 +82,12 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
 
     private int[] screenshotIds = {R.id.app_view_screenshot0, R.id.app_view_screenshot1, R.id.app_view_screenshot2, R.id.app_view_screenshot3, R.id.app_view_screenshot4, R.id.app_view_screenshot5};
 
+    private final int ACTION_DOWNLOAD = 0;
+    private final int ACTION_OPEN = 1;
+
+    private int action = ACTION_DOWNLOAD;
+
+    private Disposable mDownloadStatusObserver;
     private BaseApkField mApkField;
     private BaseApk mApk;
 
@@ -124,6 +137,8 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
     @Override
     public void onDestroy() {
         Log.e(TAG, "onDestroy");
+        if(mDownloadStatusObserver != null && !mDownloadStatusObserver.isDisposed())
+            mDownloadStatusObserver.dispose();
         super.onDestroy();
     }
 
@@ -154,6 +169,7 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
             //info
             appHeaderInfo.setText(mApk.getVersionName());
             //screenshot
+            Log.e("FANGUOYONG","screenshots:" + apkfile.getScreenShots());
             String[] url = apkfile.getScreenShots().split(",");
             int size = Math.min(screenshotIds.length, url.length);
             for (int i = 0; i < size; i++) {
@@ -181,12 +197,16 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
             appViewIntroduce.setText(Html.fromHtml(sb.toString().replace("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY));
             //download
             int version = PackageUtil.getInstalledVersion(mAppContext,mApk.getApkName());
-            if(version == -1)
+            if(version == -1) {
                 download.setText(R.string.download);
-            else if(version < mApk.getVersionCode())
+                action = ACTION_DOWNLOAD;
+            } else if(version < mApk.getVersionCode()) {
                 download.setText(R.string.update);
-            else
+                action = ACTION_DOWNLOAD;
+            } else {
                 download.setText(R.string.open);
+                action = ACTION_OPEN;
+            }
         } else {
             //no apkfile
         }
@@ -194,9 +214,45 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
 
     @OnClick(R.id.download)
     void OnDownload(View view) {
-        if(mApk == null || mApk.getDownloadUrl() == null) {
-            Toast.makeText(mContext, "无法下载，请切换来源", Toast.LENGTH_SHORT).show();
+        if(mApk == null) {
+            Toast.makeText(mContext,"应用信息错误",Toast.LENGTH_SHORT).show();
             return;
+        }
+        switch (action) {
+            case ACTION_DOWNLOAD:
+                if (mApk.getDownloadUrl() == null) {
+                    Toast.makeText(mContext, "无法下载，请切换来源", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    mDownloadTask.addDownload(mApk, mApk.getDownloadUrl());
+                    if(mDownloadStatusObserver != null && !mDownloadStatusObserver.isDisposed())
+                        mDownloadStatusObserver.dispose();
+                    mDownloadStatusObserver = mDownloadTask.observerDownloadStatus(mApk)
+                                .subscribe(new Consumer<Integer>() {
+                                    @Override
+                                    public void accept(@NonNull Integer integer) throws Exception {
+                                        //TODO 下载中
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception {
+                                        //TODO 下载失败
+                                    }
+                                }, new Action() {
+                                    @Override
+                                    public void run() throws Exception {
+                                        //TODO 下载成功
+                                    }
+                                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case ACTION_OPEN:
+                Intent i = mContext.getPackageManager().getLaunchIntentForPackage(mApk.getApkName());
+                startActivity(i);
+                break;
         }
     }
 }

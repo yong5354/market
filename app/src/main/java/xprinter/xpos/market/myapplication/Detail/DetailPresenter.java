@@ -12,6 +12,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
+import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
 
@@ -22,7 +23,7 @@ import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
 public class DetailPresenter implements DetailFragmentContract.DetailPresenter {
 
     @Inject
-    CoolMarketApi mMarketApi;
+    BaseMarketApi mMarketApi;
 
     private DetailFragmentContract.DetailView mView;
 

@@ -11,9 +11,11 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class DownloadApk {
     @PrimaryKey
-    public long id;
+    public int id;
     @ColumnInfo(name = "name")
     public String apkname;
+    @ColumnInfo(name = "versioncode")
+    public int versioncode;
     @ColumnInfo(name = "icon")
     public String iconUrl;
     @ColumnInfo(name = "downloadid")

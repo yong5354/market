@@ -16,6 +16,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import xprinter.xpos.market.myapplication.ApplicationComponent;
 import xprinter.xpos.market.myapplication.Base.model.BaseApk;
+import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 
@@ -26,7 +27,7 @@ import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 public class HomeViewModel extends ViewModel implements ApplicationComponent.injectable{
 
     @Inject
-    CoolMarketApi mMarketApi;
+    BaseMarketApi mMarketApi;
 
     private int page = 1;
 

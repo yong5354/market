@@ -1,5 +1,6 @@
 package xprinter.xpos.market.myapplication.MainActivity;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -47,6 +48,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         navView.setNavigationItemSelectedListener(this);
         navView.setCheckedItem(R.id.nav_home);
+
+        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        checkPermission(null,permission);
 
         mContainer = findViewById(R.id.container);
         if(mContainer instanceof ViewPager)

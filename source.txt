@@ -1,0 +1,11 @@
+应用市场：
+http://api.ttigame.com/api/software-index?page=2&pagesize=10 应用
+http://api.ttigame.com/api/cats/software 获取分类
+http://api.ttigame.com/api/cats/10/softwares?page=2 显示分类
+
+应用商城 coolmark
+http://coolmartapi.coolyun.com/api/v1/app/rec/list?page=2 推荐列表
+http://coolmartapi.coolyun.com/api/v1/home/list?page=2 首页推荐
+http://coolmartapi.coolyun.com/api/v1/general/detail?pid=8241 详细应用
+http://coolmartapi.coolyun.com/api/v1/app/classify/content 获取分类
+http://coolmartapi.coolyun.com/api/v1/general/rank?key=board_tag_2122&page=1&count=15 显示分类
