@@ -45,6 +45,11 @@ public class BaseActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(resId);
     }
 
+    protected void setActionBarTitle(String title) {
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+    }
+
     protected void showHome(Boolean show) {
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(show);

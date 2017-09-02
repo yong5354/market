@@ -11,4 +11,7 @@ import io.reactivex.Observable;
 public interface BaseMarketApi {
     Observable<List<BaseApk>> obtainHomepageApkList(int page);
     Observable<BaseApkField> obtainApkField(int id);
+    Observable<List<BaseTag>> obtainTag();
+    Observable<List<BaseApk>> obtainQueryResult(String query,int page);
+    Observable<List<BaseApkField>> obtainUpdateList(String param);
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">芯烨市场</string>
 
-    <string name="title_section1">首页</string>
+    <string name="title_section1">推荐</string>
     <string name="title_section2">管理</string>
     <string name="title_section3">设置</string>
 

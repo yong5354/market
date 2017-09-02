@@ -23,10 +23,12 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/myTabLayout"
             android:visibility="visible" />
 
     </android.support.design.widget.AppBarLayout>
 
+    <!--切换tab模式,content_nav和content_viewpager_nar-->
     <include
         layout="@layout/content_viewpager_nav"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

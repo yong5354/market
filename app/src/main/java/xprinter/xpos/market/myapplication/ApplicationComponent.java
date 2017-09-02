@@ -9,6 +9,7 @@ import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.Data.AppDatabase;
 import xprinter.xpos.market.myapplication.Home.HomeViewModel;
+import xprinter.xpos.market.myapplication.Result.QueryViewModel;
 import xprinter.xpos.market.myapplication.Util.ContextType;
 import xprinter.xpos.market.myapplication.Util.DownLoadTask;
 
@@ -24,7 +25,9 @@ public interface ApplicationComponent {
     AppDatabase getAppDatabase();
     DownLoadTask getDownLoadTask();
 
+    void inject(MyApplication app);
     void inject(HomeViewModel viewmodel);
+    void inject(QueryViewModel viewmodel);
 
     interface injectable {
         void inject(ApplicationComponent component);

@@ -24,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
+import xprinter.xpos.market.myapplication.Base.model.BaseTag;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 import xprinter.xpos.market.myapplication.CoolMarket.model.ApkField;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Constant;
@@ -97,5 +98,20 @@ public class CoolMarketApi implements BaseMarketApi {
                         return Observable.just((BaseApkField) apkField);
                     }
                 });
+    }
+
+    @Override
+    public Observable<List<BaseTag>> obtainTag() {
+        return null; //TODO
+    }
+
+    @Override
+    public Observable<List<BaseApk>> obtainQueryResult(String query,int page) {
+        return null; //TODO
+    }
+
+    @Override
+    public Observable<List<BaseApkField>> obtainUpdateList(String param) {
+        return null;
     }
 }

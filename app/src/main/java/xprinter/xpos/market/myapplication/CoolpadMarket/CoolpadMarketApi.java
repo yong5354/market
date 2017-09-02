@@ -15,9 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
+import xprinter.xpos.market.myapplication.Base.model.BaseTag;
 import xprinter.xpos.market.myapplication.CoolpadMarket.model.CApk;
 import xprinter.xpos.market.myapplication.CoolpadMarket.model.CApkField;
+import xprinter.xpos.market.myapplication.CoolpadMarket.model.CTag;
 import xprinter.xpos.market.myapplication.CoolpadMarket.model.Constant;
+import xprinter.xpos.market.myapplication.CoolpadMarket.model.QueryResult;
 
 /**
  * Created by Administrator on 2017-08-30.
@@ -78,6 +81,42 @@ public class CoolpadMarketApi implements BaseMarketApi{
                     @Override
                     public ObservableSource<BaseApkField> apply(@NonNull CApkField cApkField) throws Exception {
                         BaseApkField bf = cApkField.getContent().get(0);
+                        return Observable.just(bf);
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<BaseTag>> obtainTag() {
+        return mService.obtainClassify()
+                .flatMap(new Function<CTag, ObservableSource<List<BaseTag>>>() {
+                    @Override
+                    public ObservableSource<List<BaseTag>> apply(@NonNull CTag cTag) throws Exception {
+                        List<CTag.ContentBean> tag = cTag.getContent();
+                        return Observable.just((List<BaseTag>)((List)tag));
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<BaseApk>> obtainQueryResult(String query,int page) {
+        return mService.obtainClassifySection(query,page)
+                .flatMap(new Function<QueryResult, ObservableSource<List<BaseApk>>>() {
+                    @Override
+                    public ObservableSource<List<BaseApk>> apply(@NonNull QueryResult queryResult) throws Exception {
+                        List<BaseApk> baseapks = (List<BaseApk>)((List)queryResult.getContent().getList());
+                        return Observable.just(baseapks);
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<BaseApkField>> obtainUpdateList(String param) {
+        return mService.obtainUpdataApkList(param)
+                .flatMap(new Function<CApkField, ObservableSource<List<BaseApkField>>>() {
+                    @Override
+                    public ObservableSource<List<BaseApkField>> apply(@NonNull CApkField cApkField) throws Exception {
+                        List<BaseApkField> bf = (List<BaseApkField>)((List)cApkField.getContent());
                         return Observable.just(bf);
                     }
                 });

@@ -2,6 +2,8 @@ package xprinter.xpos.market.myapplication.CoolpadMarket.model;
 
 import java.util.List;
 
+import xprinter.xpos.market.myapplication.Base.model.BaseTag;
+
 /**
  * Created by Administrator on 2017-08-30.
  */
@@ -42,7 +44,7 @@ public class CTag {
         this.content = content;
     }
 
-    public static class ContentBean {
+    public static class ContentBean extends BaseTag{
         /**
          * boardid : board_rank_1019
          * boardname : 导航
@@ -85,6 +87,36 @@ public class CTag {
 
         public void setTags(List<TagsBean> tags) {
             this.tags = tags;
+        }
+
+        @Override
+        public String geticon() {
+            return icon;
+        }
+
+        @Override
+        public String getname() {
+            return boardname;
+        }
+
+        @Override
+        public String getTagId() {
+            return boardid;
+        }
+
+        @Override
+        public int getSubTagCount() {
+            return tags.size();
+        }
+
+        @Override
+        public String getSubTagName(int id) {
+            return tags.get(id).tag;
+        }
+
+        @Override
+        public String getSubTagId(int id) {
+            return tags.get(id).boardid;
         }
 
         public static class TagsBean {

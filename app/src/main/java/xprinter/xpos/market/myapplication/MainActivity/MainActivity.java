@@ -10,9 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +35,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout drawerLayout;
 
     private View mContainer;
+    private boolean mTabMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +57,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         checkPermission(null,permission);
 
         mContainer = findViewById(R.id.container);
-        if(mContainer instanceof ViewPager)
+        if(mContainer instanceof ViewPager) {
             initTab();
-        else
+            mTabMode = true;
+        } else {
+            mTabMode = false;
+            tabs.setVisibility(View.GONE);
             setFragment(HomeFragment.newInstance());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -69,7 +82,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_home:
-                setFragment(HomeFragment.newInstance());
+                if(mTabMode) {
+                    tabs.getTabAt(0).select();
+                } else
+                    setFragment(HomeFragment.newInstance());
                 break;
             case R.id.nav_manager:
                 break;
@@ -83,11 +99,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initTab() {
         tabs.setVisibility(View.VISIBLE);
+        //tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+        //tabs.setTabMode(TabLayout.MODE_FIXED);
         FragmentPagerAdapter adapter = new myFragmentPagerAdapter(getSupportFragmentManager(),this);
         ((ViewPager)mContainer).setAdapter(adapter);
         tabs.setupWithViewPager((ViewPager) mContainer);
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabs.setTabMode(TabLayout.MODE_FIXED);
         tabs.getTabAt(0).select();
     }
 }
