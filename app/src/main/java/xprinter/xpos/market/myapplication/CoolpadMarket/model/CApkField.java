@@ -189,6 +189,7 @@ public class CApkField {
         private List<?> gift;
         private List<?> activity;
 
+
         public String getTagIds() {
             return tagIds;
         }
@@ -622,6 +623,7 @@ public class CApkField {
             mApk.setPackageX(packageX);
             mApk.setSize(size);
             mApk.setVersionCode(versionCode);
+            mApk.setGift(versionName);
             mApk.setDownloadNum(downloadNum);
             mApk.setApkUrl(apkUrl);
             return mApk;

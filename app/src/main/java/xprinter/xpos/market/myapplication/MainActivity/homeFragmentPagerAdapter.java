@@ -13,12 +13,12 @@ import xprinter.xpos.market.myapplication.R;
  * Created by Administrator on 2017-08-28.
  */
 
-public class myFragmentPagerAdapter extends FragmentPagerAdapter {
+public class homeFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private String[] mTitles = new String[2];
     private Context mContext;
 
-    public myFragmentPagerAdapter(FragmentManager fm,Context context) {
+    public homeFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
         mTitles[0] = mContext.getString(R.string.tab_all_apk);

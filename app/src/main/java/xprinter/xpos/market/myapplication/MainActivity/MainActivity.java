@@ -1,6 +1,7 @@
 package xprinter.xpos.market.myapplication.MainActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,17 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xprinter.xpos.market.myapplication.Base.BaseActivity;
 import xprinter.xpos.market.myapplication.Home.HomeFragment;
+import xprinter.xpos.market.myapplication.Manager.ManagerActivity;
 import xprinter.xpos.market.myapplication.R;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,6 +86,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     setFragment(HomeFragment.newInstance());
                 break;
             case R.id.nav_manager:
+                startActivity(new Intent(this, ManagerActivity.class));
                 break;
             case R.id.nav_settings:
                 break;
@@ -101,7 +100,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tabs.setVisibility(View.VISIBLE);
         //tabs.setTabGravity(TabLayout.GRAVITY_FILL);
         //tabs.setTabMode(TabLayout.MODE_FIXED);
-        FragmentPagerAdapter adapter = new myFragmentPagerAdapter(getSupportFragmentManager(),this);
+        FragmentPagerAdapter adapter = new homeFragmentPagerAdapter(getSupportFragmentManager(),this);
         ((ViewPager)mContainer).setAdapter(adapter);
         tabs.setupWithViewPager((ViewPager) mContainer);
         tabs.getTabAt(0).select();

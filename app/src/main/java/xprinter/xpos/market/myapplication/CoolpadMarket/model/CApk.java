@@ -159,7 +159,7 @@ public class CApk {
                 private int size;
                 @SerializedName("package")
                 private String packageX;
-                private String gift;
+                private String gift; //复用成versionName
                 private int packageId;
                 private int downloadNum;
                 private String apkUrl;
@@ -227,7 +227,7 @@ public class CApk {
 
                 @Override
                 public String getVersionName() {
-                    return versionCode + "";
+                    return gift;
                 }
 
                 public int getVersionCode() {

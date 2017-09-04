@@ -1,6 +1,7 @@
 package xprinter.xpos.market.myapplication.Util;
 
 import android.app.DownloadManager;
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.InvalidationTracker;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -112,22 +113,30 @@ public class DownLoadTask {
 
     private void initData() {
         mDataSyncing = true;
-        mDatabase.apkDao().getAll()
-                .firstOrError()
-                .doOnSuccess(new Consumer<List<DownloadApk>>() {
+        Observable.fromCallable(new Callable<LiveData<List<DownloadApk>>>() {
                     @Override
-                    public void accept(@NonNull List<DownloadApk> downloadApks) throws Exception {
-                        Log.e("FANGUOYONG","getdatabase : " + downloadApks.size());
-                        for(DownloadApk apk:downloadApks) {
-                            Apk bapk = new Apk(); //TODO 抽象BaseApk
-                            bapk.setId(apk.id);
-                            bapk.setApkname(apk.apkname);
-                            bapk.setLogo(apk.iconUrl);
-                            bapk.setApkversioncode(apk.versioncode+"");
-                            bapk.downloadId = apk.downloadid;
+                    public LiveData<List<DownloadApk>> call() throws Exception {
+                        return mDatabase.apkDao().getAll();
+                    }
+                })
+                .firstOrError()
+                .doOnSuccess(new Consumer<LiveData<List<DownloadApk>>>() {
+                    @Override
+                    public void accept(@NonNull LiveData<List<DownloadApk>> listLiveData) throws Exception {
+                        List<DownloadApk> downloadApks = listLiveData.getValue();
+                        if(downloadApks != null) {
+                            Log.e("FANGUOYONG", "getdatabase : " + downloadApks.size());
+                            for (DownloadApk apk : downloadApks) {
+                                Apk bapk = new Apk(); //TODO 抽象BaseApk
+                                bapk.setId(apk.id);
+                                bapk.setApkname(apk.apkname);
+                                bapk.setLogo(apk.iconUrl);
+                                bapk.setApkversioncode(apk.versioncode + "");
+                                bapk.downloadId = apk.downloadid;
                                 if (getApk(bapk) == null) {
-                                synchronized (lock) {
-                                    mPendingList.add(bapk);
+                                    synchronized (lock) {
+                                        mPendingList.add(bapk);
+                                    }
                                 }
                             }
                         }
@@ -153,15 +162,12 @@ public class DownLoadTask {
             Toast.makeText(mContext,"正在加载数据，稍后再下载",Toast.LENGTH_SHORT).show();//TODO 未加载完数据时如何处理
             return -1;
         }
-        Log.e("FANGUOYONG","addDownload 1");
         BaseApk tmp = getApk(apk);
-        Log.e("FANGUOYONG","addDownload 2");
         if(tmp != null) {
             Log.e("FANGUOYONG","check Install");
             CheckInstall(tmp.downloadId);
             return tmp.downloadId;
         }
-        Log.e("FANGUOYONG","addDownload 3");
         //add to pending
         tmp = apk;
         final DownloadApk data = new DownloadApk();
@@ -169,15 +175,18 @@ public class DownLoadTask {
         data.apkname = apk.getApkName();
         data.iconUrl = apk.getLogo();
         data.versioncode = apk.getVersionCode();
+        data.title = apk.getTitle();
+        data.versionname = apk.getVersionName();
         tmp.downloadId = data.downloadid = startDownload(url,tmp.getApkName(),null);
         mPendingList.add(tmp);
         Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                mDatabase.apkDao().insert(data);
-            }
-        }).subscribeOn(Schedulers.io())
-                .subscribe();
+                @Override
+                public void run() throws Exception {
+                    Log.e("FANGUOYONG","insert data");
+                    mDatabase.apkDao().insert(data);
+                }
+            }).subscribeOn(Schedulers.io())
+            .subscribe();
         return tmp.downloadId;
     }
 

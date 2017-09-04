@@ -28,6 +28,7 @@ public interface ApplicationComponent {
     void inject(MyApplication app);
     void inject(HomeViewModel viewmodel);
     void inject(QueryViewModel viewmodel);
+    void inject(DownloadViewModel viewmodel);
 
     interface injectable {
         void inject(ApplicationComponent component);

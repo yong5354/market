@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".Base.BaseActivity" />
         <activity android:name=".Detail.AppDetailActivity" />
+        <activity android:name=".Manager.ManagerActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

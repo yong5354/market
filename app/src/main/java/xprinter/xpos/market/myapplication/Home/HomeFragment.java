@@ -175,7 +175,7 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
             }
         };
         //apkList.postDelayed(mLoadTask,500);
-        //mLoadTask.run(); //TODO 加载数据
+        mLoadTask.run();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package xprinter.xpos.market.myapplication.Data;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -17,7 +18,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface ApkDao {
     @Query("SELECT * from DownloadApk")
-    Flowable<List<DownloadApk>> getAll();
+    LiveData<List<DownloadApk>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(DownloadApk dapk);

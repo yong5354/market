@@ -20,4 +20,10 @@ public class DownloadApk {
     public String iconUrl;
     @ColumnInfo(name = "downloadid")
     public long downloadid;
+
+    //for display
+    @ColumnInfo(name = "title")
+    public String title;
+    @ColumnInfo(name = "versionName")
+    public String versionname;
 }
