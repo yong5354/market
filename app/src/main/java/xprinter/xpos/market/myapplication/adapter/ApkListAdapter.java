@@ -57,7 +57,9 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
 
         StringBuilder apk_info = new StringBuilder();
         apk_info.append("<font color=\"#ff35a1d4\">").append(apkinfo.getVersionName()).append("</font>");
-        apk_info.append("<font color=\"black\">, ").append(apkinfo.getApkSize()).append(", </font>");
+        if(apkinfo.getVersionName() != null && !apkinfo.getVersionName().equals(""))
+            apk_info.append("<font color=\"black\">, ");
+        apk_info.append(apkinfo.getApkSize()).append(", </font>");
         if (apkinfo.getUpdateFlag() == "new") {
             apk_info.append("<font color=\"red\">New</font>");
         } else {

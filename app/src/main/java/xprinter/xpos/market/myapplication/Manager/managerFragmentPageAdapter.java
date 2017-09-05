@@ -30,11 +30,11 @@ public class managerFragmentPageAdapter extends FragmentPagerAdapter {
             case 0:
                 return new DownloadFragment();
             case 1:
-                return new InstalledAppFragment();
+                return new UpdatedAppFragment();
             case 2:
                 return new InstalledAppFragment();
             default:
-                return new InstalledAppFragment();
+                return new DownloadFragment();
         }
     }
 

@@ -1,13 +1,11 @@
 package xprinter.xpos.market.myapplication.Manager;
 
-
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,43 +19,41 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xprinter.xpos.market.myapplication.Data.DownloadApk;
+import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.DownloadViewModel;
 import xprinter.xpos.market.myapplication.MyApplication;
 import xprinter.xpos.market.myapplication.R;
 import xprinter.xpos.market.myapplication.Util.ContextType;
 import xprinter.xpos.market.myapplication.ViewModelFactory;
-import xprinter.xpos.market.myapplication.adapter.DownloadListAdapter;
+import xprinter.xpos.market.myapplication.adapter.UpdatedApkListAdapter;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Administrator on 2017-09-05.
  */
-public class DownloadFragment extends LifecycleFragment {
+
+public class UpdatedAppFragment extends LifecycleFragment{
 
     @Inject
     ViewModelFactory mModelFactory;
     @Inject
-    @ContextType("application") Context mContext;
-
+    @ContextType("application")
+    Context mContext;
     @Bind(R.id.content)
     RecyclerView content;
 
     private DownloadViewModel mViewModel;
-    private DownloadListAdapter mAdapter;
+    private UpdatedApkListAdapter mAdapter;
 
-    public DownloadFragment() {
+    public UpdatedAppFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_manager, container, false);
         ButterKnife.bind(this, root);
-        content.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new DownloadListAdapter(getActivity());
-        content.setAdapter(mAdapter);
+        content.setLayoutManager(new LinearLayoutManager(mContext));
         return root;
     }
 
@@ -65,11 +61,13 @@ public class DownloadFragment extends LifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initInject();
+        mAdapter = new UpdatedApkListAdapter(mContext);
+        content.setAdapter(mAdapter);
         mViewModel = ViewModelProviders.of(this, mModelFactory).get(DownloadViewModel.class);
-        mViewModel.mDownloadList.observe(this, new Observer<List<DownloadApk>>() {
+        mViewModel.mUpdateList.observe(this, new Observer<List<BaseApkField>>() {
             @Override
-            public void onChanged(@Nullable List<DownloadApk> downloadApks) {
-                Log.e("FANGUOYONG","download database change");
+            public void onChanged(@Nullable List<BaseApkField> downloadApks) {
+                Log.e("FANGUOYONG","update apk change");
                 mAdapter.setList(downloadApks);
                 mAdapter.notifyDataSetChanged();
             }

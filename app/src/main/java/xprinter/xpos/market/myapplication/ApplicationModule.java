@@ -1,14 +1,20 @@
 package xprinter.xpos.market.myapplication;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.CoolpadMarket.CoolpadMarketApi;
@@ -64,5 +70,17 @@ public class ApplicationModule {
     @Singleton
     DownLoadTask provideDownLoadTask() {
         return new DownLoadTask(mContext,provideAppDatabase());
+    }
+
+    @Provides
+    @Singleton
+    LiveData<List<PackageInfo>> provideInstalledApks() {
+        return new MutableLiveData<>();
+    }
+
+    @Provides
+    @Singleton
+    LiveData<List<BaseApkField>> provideUpdatedApks() {
+        return new MutableLiveData<>();
     }
 }

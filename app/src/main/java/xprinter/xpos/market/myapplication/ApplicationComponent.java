@@ -1,10 +1,15 @@
 package xprinter.xpos.market.myapplication;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
+import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
 import xprinter.xpos.market.myapplication.Base.model.BaseMarketApi;
 import xprinter.xpos.market.myapplication.CoolMarket.CoolMarketApi;
 import xprinter.xpos.market.myapplication.Data.AppDatabase;
@@ -24,6 +29,9 @@ public interface ApplicationComponent {
     ViewModelFactory getViewModelFactory();
     AppDatabase getAppDatabase();
     DownLoadTask getDownLoadTask();
+
+    LiveData<List<PackageInfo>> getInstalledApks();
+    LiveData<List<BaseApkField>> getUpdatedApks();
 
     void inject(MyApplication app);
     void inject(HomeViewModel viewmodel);

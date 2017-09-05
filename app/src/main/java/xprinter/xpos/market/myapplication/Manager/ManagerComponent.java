@@ -13,4 +13,6 @@ import xprinter.xpos.market.myapplication.Util.PerActivity;
 @Component(dependencies = ApplicationComponent.class)
 public interface ManagerComponent {
     void inject(DownloadFragment f);
+    void inject(InstalledAppFragment f);
+    void inject(UpdatedAppFragment f);
 }

@@ -21,7 +21,7 @@ public class homeFragmentPagerAdapter extends FragmentPagerAdapter {
     public homeFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
-        mTitles[0] = mContext.getString(R.string.tab_all_apk);
+        mTitles[0] = mContext.getString(R.string.tab_suggest);
         mTitles[1] = mContext.getString(R.string.tab_type);
     }
 
