@@ -47,7 +47,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         DownloadApk apkinfo = mList.get(position);
         holder.title.setText(apkinfo.title);
         holder.version.setText(apkinfo.versionname);
-        holder.progress.setVisibility(View.INVISIBLE);
+        holder.progress.setVisibility(View.VISIBLE);
         Glide.with(mContext)
                 .load(apkinfo.iconUrl)
                 .placeholder(R.drawable.ic_default_thumbnail)
@@ -66,7 +66,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         private TextView title;
         private TextView version;
         private ProgressBar progress;
-        private ImageButton delete;
+        private TextView delete;
         private Button install;
 
         public downloadViewHolder(View itemView) {
@@ -75,7 +75,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             title = (TextView) itemView.findViewById(R.id.list_item_title);
             version = (TextView) itemView.findViewById(R.id.list_item_version);
             progress = (ProgressBar) itemView.findViewById(R.id.progress);
-            delete = (ImageButton) itemView.findViewById(R.id.delete);
+            delete = (TextView) itemView.findViewById(R.id.delete);
             install = (Button) itemView.findViewById(R.id.install);
         }
     }
