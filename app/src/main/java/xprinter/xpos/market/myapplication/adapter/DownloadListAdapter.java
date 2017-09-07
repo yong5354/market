@@ -16,8 +16,11 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
+import xprinter.xpos.market.myapplication.Base.model.BaseApkImpl;
 import xprinter.xpos.market.myapplication.Data.DownloadApk;
 import xprinter.xpos.market.myapplication.R;
+import xprinter.xpos.market.myapplication.Util.DownLoadTask;
 
 /**
  * Created by Administrator on 2017-09-04.
@@ -79,6 +82,16 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             progress = (ProgressBar) itemView.findViewById(R.id.progress);
             delete = (TextView) itemView.findViewById(R.id.delete);
             install = (Button) itemView.findViewById(R.id.install);
+        }
+    }
+
+    public static class DownloadItemList {
+        private BaseApk mApk;
+        private DownLoadTask.DownloadStatus mStatus;
+
+        public DownloadItemList() {
+            mApk = new BaseApkImpl();
+            mStatus = new DownLoadTask.DownloadStatus();
         }
     }
 

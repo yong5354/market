@@ -382,4 +382,14 @@ public class DownLoadTask {
     public void startInstall(String file) {
         Utils.InstallApk(mContext,file);
     }
+
+    public static class DownloadStatus {
+        private int status; //状态
+        private int percent;//下载进度
+
+        public DownloadStatus() {
+            status = DownloadManager.STATUS_PENDING;
+            percent = 0;
+        }
+    }
 }
