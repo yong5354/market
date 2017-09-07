@@ -46,7 +46,7 @@ public class InstalledApkListAdapter extends RecyclerView.Adapter<InstalledApkLi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final PackageInfo info = mList.get(position);
+        final PackageInfo info = mList.get(holder.getAdapterPosition());
         holder.icon.setImageDrawable(info.applicationInfo.loadIcon(mContext.getPackageManager()));
         holder.title.setText(info.applicationInfo.loadLabel(mContext.getPackageManager()));
         holder.button.setOnClickListener(new View.OnClickListener() {

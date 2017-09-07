@@ -51,8 +51,8 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        BaseApk apkinfo = mApkList.get(position);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final BaseApk apkinfo = mApkList.get(position);
         holder.app_title.setText(apkinfo.getTitle());
 
         StringBuilder apk_info = new StringBuilder();
@@ -80,7 +80,7 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onItemClick(v,position);
+                    mListener.onItemClick(apkinfo.getId());
                 }
             });
         }
@@ -112,6 +112,6 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view,int position);
+        void onItemClick(int packageid);
     }
 }

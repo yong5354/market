@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.pm.PackageInfo;
+import android.util.Log;
 
 import java.util.List;
 
@@ -40,8 +41,9 @@ public class DownloadViewModel extends ViewModel implements ApplicationComponent
     @Override
     public void inject(ApplicationComponent component) {
         component.inject(this);
-        mDownloadList = mDatabase.apkDao().getAll();
+        mDownloadList = mDatabase.apkDao().getAllLive();
         mInstalledList = installedapks;
         mUpdateList = updatedapks;
+        Log.e("FANGUOYONG","downloadViewModel :" + "database:" + mDatabase + ",dao:" + mDatabase.apkDao());
     }
 }

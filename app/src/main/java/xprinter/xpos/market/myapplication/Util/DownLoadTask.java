@@ -75,7 +75,8 @@ public class DownLoadTask {
 
     private List<BaseApk> mPendingList = new ArrayList<>();
 
-    public DownLoadTask(Context context,AppDatabase appdatabase) {
+    @Inject
+    public DownLoadTask(@ContextType("application") Context context,AppDatabase appdatabase) {
         mContext = context;
         mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
         mDatabase = appdatabase;
@@ -104,8 +105,8 @@ public class DownLoadTask {
             if(action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                 long dID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
                 if(getDownloadId(dID) != null) {
-                    //TODO install here
-                    CheckInstall(dID);
+                    //TODO 更新数据库filepath
+                    CheckInstall(dID,true);
                 }
             }
         }
@@ -113,45 +114,46 @@ public class DownLoadTask {
 
     private void initData() {
         mDataSyncing = true;
-        Observable.fromCallable(new Callable<LiveData<List<DownloadApk>>>() {
+        Observable.fromCallable(new Callable<List<DownloadApk>>() {
                     @Override
-                    public LiveData<List<DownloadApk>> call() throws Exception {
+                    public List<DownloadApk> call() throws Exception {
                         return mDatabase.apkDao().getAll();
                     }
                 })
-                .firstOrError()
-                .doOnSuccess(new Consumer<LiveData<List<DownloadApk>>>() {
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<DownloadApk>>() {
                     @Override
-                    public void accept(@NonNull LiveData<List<DownloadApk>> listLiveData) throws Exception {
-                        List<DownloadApk> downloadApks = listLiveData.getValue();
-                        if(downloadApks != null) {
-                            Log.e("FANGUOYONG", "getdatabase : " + downloadApks.size());
-                            for (DownloadApk apk : downloadApks) {
-                                Apk bapk = new Apk(); //TODO 抽象BaseApk
-                                bapk.setId(apk.id);
-                                bapk.setApkname(apk.apkname);
-                                bapk.setLogo(apk.iconUrl);
-                                bapk.setApkversioncode(apk.versioncode + "");
-                                bapk.downloadId = apk.downloadid;
-                                if (getApk(bapk) == null) {
-                                    synchronized (lock) {
-                                        mPendingList.add(bapk);
-                                    }
+                    public void accept(@NonNull List<DownloadApk> downloadApks) throws Exception {
+                        Log.e("FANGUOYONG", "load database : " + downloadApks.size());
+                        for (DownloadApk apk : downloadApks) {
+                            Apk bapk = new Apk(); //TODO 抽象BaseApk
+                            bapk.setId(apk.id);
+                            bapk.setApkname(apk.apkname);
+                            bapk.setLogo(apk.iconUrl);
+                            bapk.setApkversioncode(apk.versioncode + "");
+                            bapk.downloadId = apk.downloadid;
+                            if (getApk(bapk) == null) {
+                                synchronized (lock) {
+                                    mPendingList.add(bapk);
                                 }
                             }
                         }
-                        mDataSyncing = false;
-                        Log.e("FANGUOYONG","getdatabase done");
                     }
-                })
-                .doOnError(new Consumer<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        Log.e("FANGUOYONG","getdatabase exception!");
+                        Log.e("FANGUOYONG", throwable.getMessage());
                         mDataSyncing = false;
                     }
-                })
-                .subscribe();
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mDataSyncing = false;
+                        Log.e("FANGUOYONG", "load database done");
+                    }
+                });
+
+
     }
 
     public long addDownload(BaseApk apk, String url) throws Exception {
@@ -165,7 +167,7 @@ public class DownLoadTask {
         BaseApk tmp = getApk(apk);
         if(tmp != null) {
             Log.e("FANGUOYONG","check Install");
-            CheckInstall(tmp.downloadId);
+            CheckInstall(tmp.downloadId,false);
             return tmp.downloadId;
         }
         //add to pending
@@ -177,6 +179,7 @@ public class DownLoadTask {
         data.versioncode = apk.getVersionCode();
         data.title = apk.getTitle();
         data.versionname = apk.getVersionName();
+        data.filepath = "";
         tmp.downloadId = data.downloadid = startDownload(url,tmp.getApkName(),null);
         mPendingList.add(tmp);
         Completable.fromAction(new Action() {
@@ -314,10 +317,8 @@ public class DownLoadTask {
     }
 
     private BaseApk getApk(BaseApk apk) {
-        Log.e("FANGUOYONG","getApk 1");
         for(BaseApk a:mPendingList) {
-            Log.e("FANGUOYONG","getApk 2");
-            if(a.getApkName().equals(apk.getApkName()) && a.getVersionCode() == apk.getVersionCode())
+            if(a.getApkName().equals(apk.getApkName()) && a.getVersionCode() == apk.getVersionCode()) //TODO 可以根据packageid唯一确定
                 return a;
         }
         return null;
@@ -355,36 +356,30 @@ public class DownLoadTask {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void CheckInstall(final long downloadId) {
+    public void CheckInstall(final long downloadId, final boolean updatedatabase) {
         mInstallDisposables.add(Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
                 int status = getDownloadStatus(downloadId);
-                if(status == DownloadManager.STATUS_SUCCESSFUL)
+                if(status == DownloadManager.STATUS_SUCCESSFUL) {
+                    String filepath = getDownloadFileUri(downloadId);
+                    if(updatedatabase) {
+                        if (filepath == null)
+                            mDatabase.apkDao().updateFilepath(downloadId, "");
+                        else {
+                            Log.e("FANGUOYONG", "update filepath " + filepath + ",database:" + mDatabase + ",dao:" + mDatabase.apkDao());
+                            mDatabase.apkDao().updateFilepath(downloadId, filepath);
+                        }
+                    }
                     startInstall(getDownloadFileUri(downloadId));
+                }
             }
         })
         .subscribeOn(Schedulers.io())
         .subscribe());
     }
 
-    private void startInstall(String file) {
-        try {
-            Intent install = new Intent(Intent.ACTION_VIEW);
-            install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (Build.VERSION.SDK_INT >= 24) { //判读版本是否在7.0以上
-                //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
-                Uri apkUri = FileProvider.getUriForFile(mContext, "xprinter.xpos.market.fileprovider", new File(URI.create(file)));
-                //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                install.setDataAndType(apkUri, "application/vnd.android.package-archive");
-            } else {
-                Uri uri = Uri.parse(file);
-                install.setDataAndType(uri, "application/vnd.android.package-archive");
-            }
-            mContext.startActivity(install);
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void startInstall(String file) {
+        Utils.InstallApk(mContext,file);
     }
 }

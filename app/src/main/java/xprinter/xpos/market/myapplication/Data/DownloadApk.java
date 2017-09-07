@@ -26,4 +26,7 @@ public class DownloadApk {
     public String title;
     @ColumnInfo(name = "versionName")
     public String versionname;
+    //file path
+    @ColumnInfo(name = "filepath")
+    public String filepath;
 }

@@ -66,11 +66,11 @@ public class ApplicationModule {
         return Room.databaseBuilder(mContext,AppDatabase.class,"database-downloadapk").build();
     }
 
-    @Provides
-    @Singleton
-    DownLoadTask provideDownLoadTask() {
-        return new DownLoadTask(mContext,provideAppDatabase());
-    }
+//    @Provides
+//    @Singleton
+//    DownLoadTask provideDownLoadTask() {
+//        return new DownLoadTask(mContext,provideAppDatabase());
+//    }
 
     @Provides
     @Singleton

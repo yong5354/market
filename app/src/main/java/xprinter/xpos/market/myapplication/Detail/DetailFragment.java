@@ -232,7 +232,7 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
                                 .subscribe(new Consumer<Integer>() {
                                     @Override
                                     public void accept(@NonNull Integer integer) throws Exception {
-                                        //TODO 下载中
+                                        //TODO 下载中,button显示进度?
                                     }
                                 }, new Consumer<Throwable>() {
                                     @Override

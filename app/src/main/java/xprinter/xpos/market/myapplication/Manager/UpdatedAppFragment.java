@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,11 +20,14 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import xprinter.xpos.market.myapplication.Base.model.BaseApk;
 import xprinter.xpos.market.myapplication.Base.model.BaseApkField;
+import xprinter.xpos.market.myapplication.Detail.AppDetailActivity;
 import xprinter.xpos.market.myapplication.DownloadViewModel;
 import xprinter.xpos.market.myapplication.MyApplication;
 import xprinter.xpos.market.myapplication.R;
 import xprinter.xpos.market.myapplication.Util.ContextType;
+import xprinter.xpos.market.myapplication.Util.DownLoadTask;
 import xprinter.xpos.market.myapplication.ViewModelFactory;
 import xprinter.xpos.market.myapplication.adapter.UpdatedApkListAdapter;
 
@@ -38,6 +42,9 @@ public class UpdatedAppFragment extends LifecycleFragment{
     @Inject
     @ContextType("application")
     Context mContext;
+    @Inject
+    DownLoadTask mDownloadTask;
+
     @Bind(R.id.content)
     RecyclerView content;
 
@@ -62,6 +69,23 @@ public class UpdatedAppFragment extends LifecycleFragment{
         super.onActivityCreated(savedInstanceState);
         initInject();
         mAdapter = new UpdatedApkListAdapter(mContext);
+        mAdapter.setListener(new UpdatedApkListAdapter.OnItemClickListener() {
+            @Override
+            public void showDetail(int packageid) {
+                Intent i = new Intent(mContext, AppDetailActivity.class);
+                i.putExtra("id",packageid);
+                startActivity(i);
+            }
+
+            @Override
+            public void download(BaseApk apk) {
+                try {
+                    mDownloadTask.addDownload(apk, apk.getDownloadUrl());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         content.setAdapter(mAdapter);
         mViewModel = ViewModelProviders.of(this, mModelFactory).get(DownloadViewModel.class);
         mViewModel.mUpdateList.observe(this, new Observer<List<BaseApkField>>() {

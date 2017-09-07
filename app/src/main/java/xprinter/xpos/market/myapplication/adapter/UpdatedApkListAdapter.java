@@ -27,6 +27,7 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
 
     private Context mContext;
     private List<BaseApkField> mList = new ArrayList<>();
+    private OnItemClickListener mListener;
 
     public UpdatedApkListAdapter(Context context) {
         mContext = context;
@@ -34,6 +35,10 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
 
     public void setList(List<BaseApkField> list) {
         mList = list;
+    }
+
+    public void setListener(OnItemClickListener l) {
+        mListener = l;
     }
 
     @Override
@@ -44,8 +49,8 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        BaseApkField apkfield = mList.get(position);
-        BaseApk apk = apkfield.getApk();
+        final BaseApkField apkfield = mList.get(position);
+        final BaseApk apk = apkfield.getApk();
         holder.title.setText(apk.getTitle());
         holder.version.setText(apk.getVersionName());
         holder.changelog.setText(Html.fromHtml(apkfield.getChangelog(),Html.FROM_HTML_MODE_LEGACY));
@@ -65,6 +70,22 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
                     holder.changelog.setMaxLines(1);
             }
         });
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) {
+                    mListener.showDetail(apk.getId());
+                }
+            }
+        });
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) {
+                    mListener.download(apk);
+                }
+            }
+        });
     }
 
     @Override
@@ -74,6 +95,7 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private View root;
         private ImageView icon;
         private TextView title;
         private TextView version;
@@ -82,11 +104,17 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
 
         public ViewHolder(View itemView) {
             super(itemView);
+            root = itemView;
             icon = (ImageView) itemView.findViewById(R.id.list_item_icon);
             title = (TextView) itemView.findViewById(R.id.list_item_title);
             version = (TextView) itemView.findViewById(R.id.list_item_version);
             changelog = (TextView) itemView.findViewById(R.id.list_item_changelog);
             button = (Button) itemView.findViewById(R.id.list_item_download);
         }
+    }
+
+    public interface OnItemClickListener {
+        void showDetail(int packageid);
+        void download(BaseApk apk);
     }
 }

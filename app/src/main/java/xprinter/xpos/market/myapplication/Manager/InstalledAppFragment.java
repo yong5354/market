@@ -29,6 +29,7 @@ import xprinter.xpos.market.myapplication.DownloadViewModel;
 import xprinter.xpos.market.myapplication.MyApplication;
 import xprinter.xpos.market.myapplication.R;
 import xprinter.xpos.market.myapplication.Util.ContextType;
+import xprinter.xpos.market.myapplication.Util.Utils;
 import xprinter.xpos.market.myapplication.ViewModelFactory;
 import xprinter.xpos.market.myapplication.adapter.DownloadListAdapter;
 import xprinter.xpos.market.myapplication.adapter.InstalledApkListAdapter;
@@ -71,11 +72,7 @@ public class InstalledAppFragment extends LifecycleFragment {
         mAdapter.setListener(new InstalledApkListAdapter.OnButtonClickListener() {
             @Override
             public void ButtonClick(String packagename) {
-                Uri uri = Uri.parse("package:" + packagename);//获取删除包名的URI
-                Intent i = new Intent();
-                i.setAction(Intent.ACTION_DELETE);//设置我们要执行的卸载动作
-                i.setData(uri);//设置获取到的URI
-                startActivity(i);
+                Utils.UninstallApk(mContext,packagename);
             }
         });
         content.setAdapter(mAdapter);

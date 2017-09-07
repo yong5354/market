@@ -53,6 +53,8 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
                 .placeholder(R.drawable.ic_default_thumbnail)
                 .into(holder.icon);
         holder.icon.setTag(R.id.icon_tag,apkinfo.apkname);
+        if(!apkinfo.filepath.equals(""))
+            holder.install.setEnabled(true);
     }
 
     @Override
@@ -78,5 +80,10 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             delete = (TextView) itemView.findViewById(R.id.delete);
             install = (Button) itemView.findViewById(R.id.install);
         }
+    }
+
+    public interface ItemClickListener {
+        void Uninstall(String packagename);
+        void Install(String fileUrl);
     }
 }

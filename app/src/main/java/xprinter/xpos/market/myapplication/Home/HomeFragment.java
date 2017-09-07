@@ -111,10 +111,9 @@ public class HomeFragment extends LifecycleFragment implements HomeFragmentContr
         mAdapter = new ApkListAdapter(mContext);
         mAdapter.setListener(new ApkListAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                int apkid = mViewModel.getApkList().getValue().get(position).getId();
+            public void onItemClick(int packageid) {
                 Intent i = new Intent(mContext, AppDetailActivity.class);
-                i.putExtra("id",apkid);
+                i.putExtra("id",packageid);
                 startActivity(i);
             }
         });
