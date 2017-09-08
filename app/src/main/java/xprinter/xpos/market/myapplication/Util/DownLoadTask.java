@@ -51,6 +51,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import xprinter.xpos.market.myapplication.Base.model.BaseApk;
+import xprinter.xpos.market.myapplication.Base.model.BaseApkImpl;
 import xprinter.xpos.market.myapplication.CoolMarket.model.Apk;
 import xprinter.xpos.market.myapplication.Data.AppDatabase;
 import xprinter.xpos.market.myapplication.Data.DownloadApk;
@@ -75,7 +76,6 @@ public class DownLoadTask {
 
     private List<BaseApk> mPendingList = new ArrayList<>();
 
-    @Inject
     public DownLoadTask(@ContextType("application") Context context,AppDatabase appdatabase) {
         mContext = context;
         mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -102,10 +102,10 @@ public class DownLoadTask {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.e("FANGUOYONG","receive : " + action);
             if(action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                 long dID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
                 if(getDownloadId(dID) != null) {
-                    //TODO 更新数据库filepath
                     CheckInstall(dID,true);
                 }
             }
@@ -126,11 +126,12 @@ public class DownLoadTask {
                     public void accept(@NonNull List<DownloadApk> downloadApks) throws Exception {
                         Log.e("FANGUOYONG", "load database : " + downloadApks.size());
                         for (DownloadApk apk : downloadApks) {
-                            Apk bapk = new Apk(); //TODO 抽象BaseApk
-                            bapk.setId(apk.id);
-                            bapk.setApkname(apk.apkname);
-                            bapk.setLogo(apk.iconUrl);
-                            bapk.setApkversioncode(apk.versioncode + "");
+                            BaseApkImpl bapk = new BaseApkImpl();
+                            bapk.id = apk.id;
+                            bapk.apkname = apk.apkname;
+                            bapk.icon = apk.iconUrl;
+                            bapk.versioncode = apk.versioncode;
+                            bapk.versionname = apk.versionname;
                             bapk.downloadId = apk.downloadid;
                             if (getApk(bapk) == null) {
                                 synchronized (lock) {
@@ -180,6 +181,8 @@ public class DownLoadTask {
         data.title = apk.getTitle();
         data.versionname = apk.getVersionName();
         data.filepath = "";
+        data.status = DownloadManager.STATUS_PENDING;
+        data.percent = 0;
         tmp.downloadId = data.downloadid = startDownload(url,tmp.getApkName(),null);
         mPendingList.add(tmp);
         Completable.fromAction(new Action() {
@@ -193,8 +196,20 @@ public class DownLoadTask {
         return tmp.downloadId;
     }
 
-    public void delDownload(Apk apk) {
-        mDownloadManager.remove(apk.downloadId);
+    public void delDownload(final DownloadApk apk) {
+        mDownloadManager.remove(apk.downloadid);
+        BaseApk tmp = getDownloadId(apk.downloadid);
+        if(tmp != null) {
+            mPendingList.remove(tmp);
+            Completable.fromAction(new Action() {
+                @Override
+                public void run() throws Exception {
+                    Log.e("FANGUOYONG","delete data");
+                    mDatabase.apkDao().delete(apk);
+                }
+            }).subscribeOn(Schedulers.io())
+                    .subscribe();
+        }
     }
 
     /*
@@ -268,6 +283,29 @@ public class DownLoadTask {
             }
         }
         return -1;
+    }
+
+    /*
+    * 根据downloadId查询status
+    */
+    public DownloadStatus getDownloadTotalStatus(long downloadId) {
+        DownloadStatus s = new DownloadStatus();
+        DownloadManager.Query query = new DownloadManager.Query().setFilterById(downloadId);
+        Cursor c = mDownloadManager.query(query);
+        if (c != null) {
+            try {
+                if (c.moveToFirst()) {
+                    s.status =  c.getInt(c.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
+                    long bytes_downloaded = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    long bytes_total = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    Log.e("FANGUOYONG","load progress : " + bytes_downloaded + "," + bytes_total + "," + (bytes_downloaded * 100)/bytes_total);
+                    s.percent = (int) ((bytes_downloaded * 100)/bytes_total);
+                }
+            } finally {
+                c.close();
+            }
+        }
+        return s;
     }
 
     /*
@@ -356,10 +394,40 @@ public class DownLoadTask {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Integer> observerDownloadProgress(final List<DownloadApk> apks) {
+        return Observable.interval(5, TimeUnit.SECONDS)
+                .flatMap(new Function<Long, ObservableSource<DownloadApk>>() {
+                    @Override
+                    public ObservableSource<DownloadApk> apply(@NonNull Long aLong) throws Exception {
+                        Log.e("FANGUOYONG","Observable.interval");
+                        return Observable.fromIterable(apks);
+                    }
+                })
+                .flatMap(new Function<DownloadApk, ObservableSource<Integer>>() {
+                    @Override
+                    public ObservableSource<Integer> apply(@NonNull DownloadApk downloadApk) throws Exception {
+                        int position = -1;
+                        if(downloadApk.status != DownloadManager.STATUS_SUCCESSFUL && downloadApk.status != DownloadManager.STATUS_FAILED) {
+                            DownloadStatus s = getDownloadTotalStatus(downloadApk.downloadid);
+                            if (s.status != downloadApk.status || s.percent != downloadApk.percent) {
+                                position = apks.indexOf(downloadApk);
+                                downloadApk.status = s.status;
+                                downloadApk.percent = s.percent;
+                            }
+                        }
+                        return Observable.just(position);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public void CheckInstall(final long downloadId, final boolean updatedatabase) {
-        mInstallDisposables.add(Completable.fromAction(new Action() {
+        Log.e("FANGUOYONG","CheckInstall : " + updatedatabase);
+        Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
+                Log.e("FANGUOYONG","CheckInstall Completable");
                 int status = getDownloadStatus(downloadId);
                 if(status == DownloadManager.STATUS_SUCCESSFUL) {
                     String filepath = getDownloadFileUri(downloadId);
@@ -367,7 +435,7 @@ public class DownLoadTask {
                         if (filepath == null)
                             mDatabase.apkDao().updateFilepath(downloadId, "");
                         else {
-                            Log.e("FANGUOYONG", "update filepath " + filepath + ",database:" + mDatabase + ",dao:" + mDatabase.apkDao());
+                            Log.e("FANGUOYONG", "update filepath " + filepath);
                             mDatabase.apkDao().updateFilepath(downloadId, filepath);
                         }
                     }
@@ -376,16 +444,18 @@ public class DownLoadTask {
             }
         })
         .subscribeOn(Schedulers.io())
-        .subscribe());
+        .subscribe();
     }
 
     public void startInstall(String file) {
+        if(file == null || file.equals(""))
+            return;
         Utils.InstallApk(mContext,file);
     }
 
     public static class DownloadStatus {
-        private int status; //状态
-        private int percent;//下载进度
+        public int status; //状态
+        public int percent;//下载进度
 
         public DownloadStatus() {
             status = DownloadManager.STATUS_PENDING;

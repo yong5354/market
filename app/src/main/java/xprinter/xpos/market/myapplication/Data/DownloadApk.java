@@ -29,4 +29,9 @@ public class DownloadApk {
     //file path
     @ColumnInfo(name = "filepath")
     public String filepath;
+    //for download
+    @ColumnInfo(name = "downloadstatus")
+    public int status;
+    @ColumnInfo(name = "downloadpercent")
+    public int percent;
 }

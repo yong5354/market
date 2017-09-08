@@ -132,7 +132,7 @@ public class MyApplication extends Application {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(Intent.ACTION_PACKAGE_ADDED) || action.equals(Intent.ACTION_PACKAGE_REPLACED)) {
-                //TODO 更新数据库
+                //TODO 更新数据库 DownloadList
             }
             getData();
         }

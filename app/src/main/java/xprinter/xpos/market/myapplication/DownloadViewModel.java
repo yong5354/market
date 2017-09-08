@@ -44,6 +44,5 @@ public class DownloadViewModel extends ViewModel implements ApplicationComponent
         mDownloadList = mDatabase.apkDao().getAllLive();
         mInstalledList = installedapks;
         mUpdateList = updatedapks;
-        Log.e("FANGUOYONG","downloadViewModel :" + "database:" + mDatabase + ",dao:" + mDatabase.apkDao());
     }
 }

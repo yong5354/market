@@ -92,6 +92,7 @@ public class UpdatedAppFragment extends LifecycleFragment{
             @Override
             public void onChanged(@Nullable List<BaseApkField> downloadApks) {
                 Log.e("FANGUOYONG","update apk change");
+                Log.e("FANGUOYONG","DownloadTask in Updated : " + mDownloadTask);
                 mAdapter.setList(downloadApks);
                 mAdapter.notifyDataSetChanged();
             }

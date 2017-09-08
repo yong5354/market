@@ -100,6 +100,11 @@ public class QueryFragment extends Fragment {
                         mAdapter.setTagList(baseTags);
                         mAdapter.notifyDataSetChanged();
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
                 });
     }
 

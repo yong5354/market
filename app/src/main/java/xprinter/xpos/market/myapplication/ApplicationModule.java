@@ -31,12 +31,12 @@ public class ApplicationModule {
 
     private final Context mContext;
     //private ViewModelFactory mFactory;
-    //private AppDatabase mDatabase;
+    private AppDatabase mDatabase;
 
     ApplicationModule(Context context) {
         mContext = context;
         //mFactory = new ViewModelFactory((MyApplication) mContext);
-        //mDatabase = Room.databaseBuilder(mContext,AppDatabase.class,"database-downloadapk").build();
+        mDatabase = Room.databaseBuilder(mContext,AppDatabase.class,"database-downloadapk").build();
     }
 
     @Provides
@@ -63,14 +63,15 @@ public class ApplicationModule {
     @Provides
     @Singleton
     AppDatabase provideAppDatabase() {
-        return Room.databaseBuilder(mContext,AppDatabase.class,"database-downloadapk").build();
+        //return Room.databaseBuilder(mContext,AppDatabase.class,"database-downloadapk").build();
+        return mDatabase;
     }
 
-//    @Provides
-//    @Singleton
-//    DownLoadTask provideDownLoadTask() {
-//        return new DownLoadTask(mContext,provideAppDatabase());
-//    }
+    @Provides
+    @Singleton
+    DownLoadTask provideDownLoadTask() {
+        return new DownLoadTask(mContext,mDatabase);
+    }
 
     @Provides
     @Singleton

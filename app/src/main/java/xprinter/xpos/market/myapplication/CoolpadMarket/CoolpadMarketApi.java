@@ -45,11 +45,11 @@ public class CoolpadMarketApi implements BaseMarketApi{
 
     private void initService() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        //logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
-                .addInterceptor(logging)
+                //.addInterceptor(logging)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)

@@ -225,6 +225,7 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
                     return;
                 }
                 try {
+                    Log.e("FANGUOYONG","DownloadTask in Detail : " + mDownloadTask);
                     mDownloadTask.addDownload(mApk, mApk.getDownloadUrl());
                     if(mDownloadStatusObserver != null && !mDownloadStatusObserver.isDisposed())
                         mDownloadStatusObserver.dispose();
