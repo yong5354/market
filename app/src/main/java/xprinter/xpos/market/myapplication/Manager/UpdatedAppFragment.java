@@ -91,8 +91,7 @@ public class UpdatedAppFragment extends LifecycleFragment{
         mViewModel.mUpdateList.observe(this, new Observer<List<BaseApkField>>() {
             @Override
             public void onChanged(@Nullable List<BaseApkField> downloadApks) {
-                Log.e("FANGUOYONG","update apk change");
-                Log.e("FANGUOYONG","DownloadTask in Updated : " + mDownloadTask);
+                Log.e("FANGUOYONG","update apk change : " + downloadApks.size());
                 mAdapter.setList(downloadApks);
                 mAdapter.notifyDataSetChanged();
             }

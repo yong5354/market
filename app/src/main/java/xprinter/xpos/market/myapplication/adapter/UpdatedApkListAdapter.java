@@ -1,8 +1,10 @@
 package xprinter.xpos.market.myapplication.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,11 +51,15 @@ public class UpdatedApkListAdapter extends RecyclerView.Adapter<UpdatedApkListAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final BaseApkField apkfield = mList.get(position);
+        BaseApkField apkfield = mList.get(position);
         final BaseApk apk = apkfield.getApk();
         holder.title.setText(apk.getTitle());
         holder.version.setText(apk.getVersionName());
-        holder.changelog.setText(Html.fromHtml(apkfield.getChangelog(),Html.FROM_HTML_MODE_LEGACY));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.changelog.setText(Html.fromHtml(apkfield.getChangelog(),Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            holder.changelog.setText(Html.fromHtml(apkfield.getChangelog()));
+        }
 
         Glide.with(mContext)
                 .load(apk.getLogo())

@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,6 +21,7 @@ import xprinter.xpos.market.myapplication.Base.BaseActivity;
 import xprinter.xpos.market.myapplication.Home.HomeFragment;
 import xprinter.xpos.market.myapplication.Manager.ManagerActivity;
 import xprinter.xpos.market.myapplication.R;
+import xprinter.xpos.market.myapplication.Search.SearchActivity;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,6 +33,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     NavigationView navView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @Bind(R.id.search)
+    EditText search;
 
     private View mContainer;
     private boolean mTabMode = false;
@@ -52,10 +56,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navView.setCheckedItem(R.id.nav_home);
 
         String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        checkPermission(null,permission);
+        checkPermission(null, permission);
+
+        search.setFocusable(false);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,SearchActivity.class));
+            }
+        });
 
         mContainer = findViewById(R.id.container);
-        if(mContainer instanceof ViewPager) {
+        if (mContainer instanceof ViewPager) {
             initTab();
             mTabMode = true;
         } else {
@@ -80,7 +92,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_home:
-                if(mTabMode) {
+                if (mTabMode) {
                     tabs.getTabAt(0).select();
                 } else
                     setFragment(HomeFragment.newInstance());
@@ -100,8 +112,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tabs.setVisibility(View.VISIBLE);
         //tabs.setTabGravity(TabLayout.GRAVITY_FILL);
         //tabs.setTabMode(TabLayout.MODE_FIXED);
-        FragmentPagerAdapter adapter = new homeFragmentPagerAdapter(getSupportFragmentManager(),this);
-        ((ViewPager)mContainer).setAdapter(adapter);
+        FragmentPagerAdapter adapter = new homeFragmentPagerAdapter(getSupportFragmentManager(), this);
+        ((ViewPager) mContainer).setAdapter(adapter);
         tabs.setupWithViewPager((ViewPager) mContainer);
         tabs.getTabAt(0).select();
     }

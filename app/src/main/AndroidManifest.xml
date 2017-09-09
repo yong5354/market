@@ -3,7 +3,7 @@
     package="xprinter.xpos.market.myapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.DELETE_PACKAGES"/>
+    <uses-permission android:name="android.permission.DELETE_PACKAGES" />
 
     <application
         android:name=".MyApplication"
@@ -36,7 +36,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Result.ResultActivity"></activity>
+        <activity android:name=".Result.ResultActivity" />
+        <activity android:name=".Search.SearchActivity"></activity>
     </application>
 
 </manifest>

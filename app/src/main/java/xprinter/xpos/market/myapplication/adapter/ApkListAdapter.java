@@ -2,6 +2,7 @@ package xprinter.xpos.market.myapplication.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -65,7 +66,11 @@ public class ApkListAdapter extends RecyclerView.Adapter<ApkListAdapter.ViewHold
         } else {
             apk_info.append("<font color=\"black\">Update</font>");
         }
-        holder.app_info.setText(Html.fromHtml(apk_info.toString(),Html.FROM_HTML_MODE_LEGACY));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.app_info.setText(Html.fromHtml(apk_info.toString(),Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            holder.app_info.setText(Html.fromHtml(apk_info.toString()));
+        }
 
         holder.app_desc.setText(apkinfo.getDescription());
         holder.app_downnum.setText(apkinfo.getDownloadCount()+"");

@@ -181,7 +181,7 @@ public class DownLoadTask {
         data.title = apk.getTitle();
         data.versionname = apk.getVersionName();
         data.filepath = "";
-        data.status = DownloadManager.STATUS_PENDING;
+        data.status = -1;
         data.percent = 0;
         tmp.downloadId = data.downloadid = startDownload(url,tmp.getApkName(),null);
         mPendingList.add(tmp);
@@ -395,7 +395,7 @@ public class DownLoadTask {
     }
 
     public Observable<Integer> observerDownloadProgress(final List<DownloadApk> apks) {
-        return Observable.interval(5, TimeUnit.SECONDS)
+        return Observable.interval(0, 1 , TimeUnit.SECONDS)
                 .flatMap(new Function<Long, ObservableSource<DownloadApk>>() {
                     @Override
                     public ObservableSource<DownloadApk> apply(@NonNull Long aLong) throws Exception {
@@ -410,24 +410,25 @@ public class DownLoadTask {
                         if(downloadApk.status != DownloadManager.STATUS_SUCCESSFUL && downloadApk.status != DownloadManager.STATUS_FAILED) {
                             DownloadStatus s = getDownloadTotalStatus(downloadApk.downloadid);
                             if (s.status != downloadApk.status || s.percent != downloadApk.percent) {
-                                position = apks.indexOf(downloadApk);
-                                downloadApk.status = s.status;
+                                if(s.status != downloadApk.status) { //写数据库
+                                    downloadApk.status = s.status;
+                                    mDatabase.apkDao().update(downloadApk);
+                                }
                                 downloadApk.percent = s.percent;
+                                position = apks.indexOf(downloadApk);
                             }
                         }
                         return Observable.just(position);
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public void CheckInstall(final long downloadId, final boolean updatedatabase) {
-        Log.e("FANGUOYONG","CheckInstall : " + updatedatabase);
-        Completable.fromAction(new Action() {
+        mInstallDisposables.add(Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
-                Log.e("FANGUOYONG","CheckInstall Completable");
                 int status = getDownloadStatus(downloadId);
                 if(status == DownloadManager.STATUS_SUCCESSFUL) {
                     String filepath = getDownloadFileUri(downloadId);
@@ -444,7 +445,7 @@ public class DownLoadTask {
             }
         })
         .subscribeOn(Schedulers.io())
-        .subscribe();
+        .subscribe());
     }
 
     public void startInstall(String file) {

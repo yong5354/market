@@ -2,6 +2,7 @@ package xprinter.xpos.market.myapplication.Manager;
 
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -10,13 +11,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -50,6 +54,8 @@ public class DownloadFragment extends LifecycleFragment {
     private DownloadViewModel mViewModel;
     private DownloadListAdapter mAdapter;
     private Disposable mDownloadDisposable;
+
+    private List<DownloadApk> mList = new ArrayList<>();
 
     public DownloadFragment() {
         // Required empty public constructor
@@ -92,11 +98,18 @@ public class DownloadFragment extends LifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initInject();
+        DefaultItemAnimator ia = (DefaultItemAnimator) content.getItemAnimator();
+        ia.setSupportsChangeAnimations(false);
         mViewModel = ViewModelProviders.of(this, mModelFactory).get(DownloadViewModel.class);
         mViewModel.mDownloadList.observe(this, new Observer<List<DownloadApk>>() {
             @Override
             public void onChanged(@Nullable List<DownloadApk> downloadApks) {
                 Log.e("FANGUOYONG","download database change");
+                mList = downloadApks;
+                for(DownloadApk apk:downloadApks) {
+                    if(apk.status == DownloadManager.STATUS_SUCCESSFUL)
+                        apk.percent = 100;
+                }
                 mAdapter.setList(downloadApks);
                 mAdapter.notifyDataSetChanged();
                 startObserver(downloadApks);
@@ -104,7 +117,18 @@ public class DownloadFragment extends LifecycleFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        startObserver(mList);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mDownloadDisposable != null && !mDownloadDisposable.isDisposed())
+            mDownloadDisposable.dispose();
+    }
 
     @Override
     public void onDestroyView() {

@@ -4,6 +4,7 @@ package xprinter.xpos.market.myapplication.Detail;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -194,7 +195,11 @@ public class DetailFragment extends Fragment implements DetailFragmentContract.D
                     .append(apkfile.getChangelog()).append("<br/>");
             sb.append("<br/><strong>更新记录 :</strong><br/>").append(apkfile.getChangehistory())
                     .append("<br/>");
-            appViewIntroduce.setText(Html.fromHtml(sb.toString().replace("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                appViewIntroduce.setText(Html.fromHtml(sb.toString().replace("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                appViewIntroduce.setText(Html.fromHtml(sb.toString().replace("\n", "<br/>")));
+            }
             //download
             int version = PackageUtil.getInstalledVersion(mAppContext,mApk.getApkName());
             if(version == -1) {

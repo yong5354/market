@@ -1,6 +1,7 @@
 package xprinter.xpos.market.myapplication.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +58,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         holder.title.setText(dapk.title);
         holder.version.setText(dapk.versionname);
         holder.progress.setVisibility(View.VISIBLE);
+        holder.progress.setProgress(dapk.percent);
         Glide.with(mContext)
                 .load(dapk.iconUrl)
                 .placeholder(R.drawable.ic_default_thumbnail)
@@ -87,7 +89,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         Log.e("FANGUOYONG","onBindViewHolder payloads : " + payloads.size());
         if(!payloads.isEmpty()) {
             int percent = (int) payloads.get(0);
-            holder.progress.setProgress(percent,false);
+            holder.progress.setProgress(percent);
             Log.e("FANGUOYONG","onBindViewHolder progress : " + percent);
         } else {
             super.onBindViewHolder(holder,position,payloads);
